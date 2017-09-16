@@ -1,0 +1,11 @@
+name: RRPGCore
+version: 0.0.1
+authors: [ShawnClake, QuinnBast]
+main: com.openrubicon.core.RRPGCore
+depend: [Vault]
+database: true
+website: https://github.com/OpenRubiconProject
+commands:
+      rubicon:
+               description: Spits out the current status of Rubicon and its versions
+               usage: /rubicon
