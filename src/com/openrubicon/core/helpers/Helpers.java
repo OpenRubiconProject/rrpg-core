@@ -1,4 +1,4 @@
-package com.openrubicon.core;
+package com.openrubicon.core.helpers;
 
 import com.rits.cloning.Cloner;
 import org.apache.commons.lang.StringUtils;

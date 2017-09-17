@@ -1,8 +1,16 @@
 package com.openrubicon.core;
 
 import com.openrubicon.core.connector.ConnectorServer;
+import com.openrubicon.core.database.Database;
+import com.openrubicon.core.events.EventListener;
+import com.openrubicon.core.events.FiveTickEvent;
+import com.openrubicon.core.vault.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -20,7 +28,7 @@ import java.sql.SQLException;
 public class RRPGCore extends JavaPlugin {
 
     private final boolean devMode = true;      // Dev mode
-    //public static Configuration config;        // Configuration instance
+    public static Configuration config;        // Configuration instance
     public static ConnectorServer connector;   // Connector server
     public static Permission permission;       // Vault permissions
     public static Connection database;         // Database connection
@@ -28,6 +36,8 @@ public class RRPGCore extends JavaPlugin {
     public static Plugin plugin;               // Core plugin instance
 
     public static ModuleManager modules;       // Module manager
+
+    public static boolean fatalError = false;
 
     @Override
     public void onLoad()
@@ -55,10 +65,45 @@ public class RRPGCore extends JavaPlugin {
     {
         getLogger().info("Beginning Enabling Process..");
 
-        //RRPGCore.config = new Configuration(devMode);
+        RRPGCore.config = new Configuration(devMode);
         getLogger().info("Configuration loaded.");
 
-        //this.loadConnector(Configuration.CONNECTOR_PORT);
+        this.loadConnector(Configuration.CONNECTOR_PORT);
+
+        getServer().getPluginManager().registerEvents(new EventListener(), this);
+        getLogger().info("Registered Events");
+
+
+        if (!Bukkit.getPluginManager().isPluginEnabled("Vault"))
+        {
+            getLogger().severe(String.format("[%s] - RRPG Disabled because the Vault API has not been added.", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            RRPGCore.fatalError = true;
+            Bukkit.shutdown();
+        } else {
+            getLogger().info("Economics has loaded and Vault has hooked in");
+        }
+
+        this.setupPermissions();
+        getLogger().info("Permissions setup");
+
+        getLogger().info("Scheduling 5 tick listener");
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                FiveTickEvent event = new FiveTickEvent();
+                Bukkit.getPluginManager().callEvent(event);
+            }
+        }, 1, 5);
+
+        getLogger().info("Scheduling configuration autosave (5 min)");
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                RRPGCore.config.save();
+            }
+        }, 6000, 6000);
+
 
     }
 
@@ -116,8 +161,11 @@ public class RRPGCore extends JavaPlugin {
      * Runs in async to speed up loading times and play times.
      */
     private void loadDatabase() {
-        //final String username = Configuration.DB_USER;
-        //final String password = Configuration.DB_PASS;
+        final String host = Configuration.DB_HOST;
+        final String port = Configuration.DB_PORT;
+        final String username = Configuration.DB_USER;
+        final String password = Configuration.DB_PASS;
+        final String name = Configuration.DB_NAME;
         //final String url = "jdbc:mysql://localhost:3306/" + Configuration.DB_NAME;
 
         getLogger().info("Establishing Database Thread...");
@@ -127,7 +175,10 @@ public class RRPGCore extends JavaPlugin {
             public void run() {
 
                 getLogger().info("Database Connection Starting...");
-                try {
+
+                Database.initialize(host, port, username, password, name);
+
+                /*try {
                     if (RRPGCore.database != null && !RRPGCore.database.isClosed()) {
                         return;
                     }
@@ -147,8 +198,8 @@ public class RRPGCore extends JavaPlugin {
                         try { //Another try catch to get any SQL errors (for example connections errors)
 
 
-                            //RRPGCore.database = DriverManager.getConnection(url, username, password);
-                            RRPGCore.database = DriverManager.getConnection("", "", "");
+                            RRPGCore.database = DriverManager.getConnection(url, username, password);
+                            //RRPGCore.database = DriverManager.getConnection("", "", "");
 
 
                             //with the method getConnection() from DriverManager, we're trying to set
@@ -165,7 +216,7 @@ public class RRPGCore extends JavaPlugin {
                 } catch (SQLException e){
                     getLogger().warning("A Database Problem Occurred. Check your system configuration.");
                     e.printStackTrace();
-                }
+                }*/
 
                 getLogger().info("Database Connection Established.");
 
@@ -174,5 +225,41 @@ public class RRPGCore extends JavaPlugin {
         });
 
     }
+
+    public net.milkbowl.vault.economy.Economy setupVaultEconomy(Economy econ)
+    {
+        try {
+            Plugin p = Bukkit.getPluginManager().getPlugin("Vault");
+            if (!Bukkit.getPluginManager().isPluginEnabled("Vault"))
+                return null;
+
+            getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, econ, p, ServicePriority.Highest);
+
+            getLogger().info(String.format("[Economy] %s found: %s", econ.getName(), this.isEnabled() ? "Loaded" : "Waiting"));
+        } catch (Exception e) {
+            getLogger().severe(String.format("[Economy] There was an error hooking %s - check to make sure you're using a compatible version!", econ.getName()));
+            e.printStackTrace();
+        }
+
+        RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        getLogger().info(getServer().getServicesManager().toString());
+
+        return economyProvider.getProvider();
+
+    }
+
+    private void setupPermissions()
+    {
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+
+        if(permissionProvider == null)
+        {
+            getLogger().severe("Vault is missing permission provider. Ensure you have the Vault API installed.");
+            return;
+        }
+
+        permission = permissionProvider.getProvider();
+    }
+
 
 }
