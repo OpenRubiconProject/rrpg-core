@@ -1,5 +1,6 @@
 package com.openrubicon.core.database;
 
+import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
 public class Database {
@@ -23,5 +24,16 @@ public class Database {
 
     public static void initialize() {
         sql = new Sql2o("jdbc:mysql://" + host + ":" + port + "/" + name, username, password);
+    }
+
+    public Connection connection()
+    {
+        try(Connection connection = Database.sql.open())
+        {
+            return connection;
+        } catch(Exception e)
+        {
+            return null;
+        }
     }
 }

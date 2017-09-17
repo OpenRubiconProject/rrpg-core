@@ -1,4 +1,4 @@
-package com.openrubicon.core;
+package com.openrubicon.core.interfaces;
 
 public interface iModule {
 

@@ -1,5 +1,6 @@
 package com.openrubicon.core;
 
+import com.openrubicon.core.interfaces.iModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

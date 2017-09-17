@@ -1,13 +1,15 @@
 package com.openrubicon.core;
 
+import com.openrubicon.core.configuration.Configuration;
 import com.openrubicon.core.connector.ConnectorServer;
 import com.openrubicon.core.database.Database;
 import com.openrubicon.core.events.EventListener;
 import com.openrubicon.core.events.FiveTickEvent;
+import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.core.vault.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
@@ -15,8 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * RRPGCore
@@ -31,7 +31,7 @@ public class RRPGCore extends JavaPlugin {
     public static Configuration config;        // Configuration instance
     public static ConnectorServer connector;   // Connector server
     public static Permission permission;       // Vault permissions
-    public static Connection database;         // Database connection
+    public static Database database;         // Database connection
     //public static DatabaseManager dbManager;   // Database manager
     public static Plugin plugin;               // Core plugin instance
 
@@ -42,16 +42,16 @@ public class RRPGCore extends JavaPlugin {
     @Override
     public void onLoad()
     {
-        getLogger().info("Beginning Loading Process..");
+        getLogger().info(Helpers.colorize(Configuration.PRIMARY_COLOR + "Beginning Loading Process.."));
 
         RRPGCore.plugin = this;
         this.establishConfig();
 
-        this.loadDatabase();
-        getLogger().info("Database connected");
-
         MaterialGroups.initialize();
         getLogger().info("Material Groups Loaded..");
+
+        RRPGCore.modules = new ModuleManager();
+        getLogger().info("Established Module Provider.");
     }
 
     @Override
@@ -68,10 +68,13 @@ public class RRPGCore extends JavaPlugin {
         RRPGCore.config = new Configuration(devMode);
         getLogger().info("Configuration loaded.");
 
+        this.loadDatabase();
+        getLogger().info("Database connected");
+
         this.loadConnector(Configuration.CONNECTOR_PORT);
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
-        getLogger().info("Registered Events");
+        getLogger().info("Established Event Handler.");
 
 
         if (!Bukkit.getPluginManager().isPluginEnabled("Vault"))
@@ -85,9 +88,9 @@ public class RRPGCore extends JavaPlugin {
         }
 
         this.setupPermissions();
-        getLogger().info("Permissions setup");
+        getLogger().info("Established Permissions");
 
-        getLogger().info("Scheduling 5 tick listener");
+        getLogger().info("Scheduling 5 Tick Event");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -96,7 +99,7 @@ public class RRPGCore extends JavaPlugin {
             }
         }, 1, 5);
 
-        getLogger().info("Scheduling configuration autosave (5 min)");
+        getLogger().info("Scheduling Configuration Autosave (5 min)");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -175,8 +178,11 @@ public class RRPGCore extends JavaPlugin {
             public void run() {
 
                 getLogger().info("Database Connection Starting...");
-
                 Database.initialize(host, port, username, password, name);
+
+                RRPGCore.database = new Database();
+
+
 
                 /*try {
                     if (RRPGCore.database != null && !RRPGCore.database.isClosed()) {
@@ -226,7 +232,7 @@ public class RRPGCore extends JavaPlugin {
 
     }
 
-    public net.milkbowl.vault.economy.Economy setupVaultEconomy(Economy econ)
+    public net.milkbowl.vault.economy.Economy registerEconomy(Economy econ)
     {
         try {
             Plugin p = Bukkit.getPluginManager().getPlugin("Vault");

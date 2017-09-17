@@ -1,5 +1,6 @@
-package com.openrubicon.core;
+package com.openrubicon.core.configuration;
 
+import com.openrubicon.core.RRPGCore;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class Configuration {
@@ -112,12 +113,26 @@ public class Configuration {
         return val;
     }
 
-    /*private String get(String key, String defaultValue)
+    private String get(String key, String defaultValue)
     {
         String val = Configuration.config.getString(key, defaultValue);
         Configuration.config.set(key, val);
         return val;
-    }*/
+    }
+
+    private int get(String key, int defaultValue)
+    {
+        int val = Configuration.config.getInt(key, defaultValue);
+        Configuration.config.set(key, val);
+        return val;
+    }
+
+    private long get(String key, long defaultValue)
+    {
+        long val = Configuration.config.getLong(key, defaultValue);
+        Configuration.config.set(key, val);
+        return val;
+    }
 
     public static long getNextLatestItemId()
     {
