@@ -10,7 +10,7 @@ import com.openrubicon.core.events.EventListener;
 import com.openrubicon.core.events.FiveTickEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
-import com.openrubicon.core.vault.Economy;
+import com.openrubicon.core.api.vault.economy.Economy;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
