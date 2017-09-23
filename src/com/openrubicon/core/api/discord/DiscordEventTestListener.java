@@ -48,7 +48,7 @@ public class DiscordEventTestListener extends ListenerAdapter {
 
             String test = "SELECT count(id) FROM rubicon_discord_text_channels WHERE channel_id = :channel_id";
             int count = 0;
-            try(Connection connection = RRPGCore.database.connection())
+            try(Connection connection = RRPGCore.database.connection().get())
             {
                 count = connection.createQuery(test).bind(txtChannels).executeScalar(Integer.class);
             }
@@ -57,7 +57,7 @@ public class DiscordEventTestListener extends ListenerAdapter {
             {
                 txtChannels.setDisabled(false);
                 String sql = "INSERT INTO rubicon_discord_text_channels (channel_id, disabled) VALUES (:channel_id, :disabled)";
-                try(Connection connection = RRPGCore.database.connection())
+                try(Connection connection = RRPGCore.database.connection().get())
                 {
                     connection.createQuery(sql, true).bind(txtChannels).executeUpdate().getKey();
                 }

@@ -1,9 +1,11 @@
 package com.openrubicon.core;
 
-import com.openrubicon.core.interfaces.iModule;
+import com.openrubicon.core.database.interfaces.DatabaseModel;
+import com.openrubicon.core.interfaces.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -43,19 +45,29 @@ public class ModuleManager {
      */
     public void addModule(JavaPlugin module)
     {
-        if(!(module instanceof iModule))
+        if(!(module instanceof Module))
         {
-            Bukkit.getLogger().warning("Module " + module.getName() + " was not loaded because it does not conform to iModule. Please report this to the module's plugin developer.");
+            Bukkit.getLogger().warning("Module " + module.getName() + " was not loaded because it does not conform to Module. Please report this to the module's plugin developer.");
             return;
         }
 
-        if(this.modules.containsKey(((iModule)module).getKey()))
+        if(this.modules.containsKey(((Module)module).getKey()))
         {
             Bukkit.getLogger().warning("Module " + module.getName() + " was not loaded because it conflicts with an existing module. Please report this to the module's plugin developer.");
             return;
         }
 
-        this.modules.put(((iModule)module).getKey(), module);
+        this.modules.put(((Module)module).getKey(), module);
         Bukkit.getLogger().warning("Module " + module.getName() + " was added.");
+    }
+
+    public ArrayList<DatabaseModel> getDatabaseModels()
+    {
+        ArrayList<DatabaseModel> models = new ArrayList<>();
+        for(JavaPlugin module : this.getModules().values())
+        {
+            models.addAll(((Module)module).getDatabaseModels());
+        }
+        return models;
     }
 }

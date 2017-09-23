@@ -1,11 +1,13 @@
 package com.openrubicon.core.database.models;
 
-import org.sql2o.Connection;
+import com.openrubicon.core.database.Connection;
+import com.openrubicon.core.database.interfaces.DatabaseMigration;
+import com.openrubicon.core.database.interfaces.DatabaseModel;
+import com.openrubicon.core.database.migrations.CreatePlayers;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-public class Player {
+public class Player implements DatabaseModel {
 
     private long id;
     private String uuid;
@@ -20,6 +22,12 @@ public class Player {
     private Date created_at;
     private Date updated_at;
     private Date deleted_at;
+
+    private String tableName = "rubicon_players";
+    private int version = 1;
+
+    public Player() {
+    }
 
     public Player(String uuid) {
         this.uuid = uuid;
@@ -137,31 +145,48 @@ public class Player {
 
     public static List<Player> getPlayers(Connection connection)
     {
-        return connection.createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null").executeAndFetch(Player.class);
+        return connection.get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null").executeAndFetch(Player.class);
     }
 
     public static void insertPlayer(Connection connection, Player player)
     {
         String sql = "INSERT INTO rubicon_players (uuid, username, display_name) VALUES (:uuid, :username, :display_name)";
 
-        connection.createQuery(sql, true).bind(player).executeUpdate().getKey();
+        connection.get().createQuery(sql, true).bind(player).executeUpdate().getKey();
     }
 
     public static Player getPlayer(Connection connection, Player player)
     {
-        List<Player> p = connection.createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(player).executeAndFetch(Player.class);
+        List<Player> p = connection.get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(player).executeAndFetch(Player.class);
         return p.get(0);
     }
 
     public static boolean isPlayerExist(Connection connection, Player player)
     {
-        return connection.createQuery("SELECT count(id) FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(player).executeScalar(Integer.class) >= 1;
+        return connection.get().createQuery("SELECT count(id) FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(player).executeScalar(Integer.class) >= 1;
     }
 
     public static void updatePlayer(Connection connection, Player player)
     {
         String sql = "UPDATE rubicon_players SET display_name = :display_name, username = :username, last_joined = :last_joined, token = :token, discord_id = :discord_id, verified = :verified WHERE id = :id";
 
-        connection.createQuery(sql).bind(player).executeUpdate();
+        connection.get().createQuery(sql).bind(player).executeUpdate();
+    }
+
+    @Override
+    public HashMap<Integer, DatabaseMigration> getMigrations() {
+        HashMap<Integer, DatabaseMigration> migrations = new HashMap<>();
+        migrations.put(1, new CreatePlayers());
+        return migrations;
+    }
+
+    @Override
+    public String getTableName() {
+        return this.tableName;
+    }
+
+    @Override
+    public int getVersion() {
+        return this.version;
     }
 }

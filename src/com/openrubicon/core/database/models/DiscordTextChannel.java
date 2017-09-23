@@ -1,11 +1,13 @@
 package com.openrubicon.core.database.models;
 
+import com.openrubicon.core.database.interfaces.DatabaseMigration;
+import com.openrubicon.core.database.interfaces.DatabaseModel;
+import com.openrubicon.core.database.migrations.CreateDiscordTextChannels;
 import org.sql2o.Connection;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-public class DiscordTextChannel {
+public class DiscordTextChannel implements DatabaseModel {
 
     private long id;
     private long channel_id;
@@ -13,6 +15,12 @@ public class DiscordTextChannel {
     private Date created_at;
     private Date updated_at;
     private Date deleted_at;
+
+    private String tableName = "rubicon_discord_text_channels";
+    private int version = 1;
+
+    public DiscordTextChannel() {
+    }
 
     public DiscordTextChannel(long channel_id) {
         this.channel_id = channel_id;
@@ -69,5 +77,22 @@ public class DiscordTextChannel {
     public static List<DiscordTextChannel> getChannels(Connection connection)
     {
            return connection.createQuery("SELECT channel_id FROM rubicon_discord_text_channels WHERE disabled=0").executeAndFetch(DiscordTextChannel.class);
+    }
+
+    @Override
+    public HashMap<Integer, DatabaseMigration> getMigrations() {
+        HashMap<Integer, DatabaseMigration> migrations = new HashMap<>();
+        migrations.put(1, new CreateDiscordTextChannels());
+        return migrations;
+    }
+
+    @Override
+    public String getTableName() {
+        return this.tableName;
+    }
+
+    @Override
+    public int getVersion() {
+        return this.version;
     }
 }

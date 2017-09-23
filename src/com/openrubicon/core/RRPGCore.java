@@ -5,12 +5,16 @@ import com.openrubicon.core.api.discord.DiscordEventTestListener;
 import com.openrubicon.core.configuration.Configuration;
 import com.openrubicon.core.connector.ConnectorServer;
 import com.openrubicon.core.database.Database;
+import com.openrubicon.core.database.DatabaseMigrator;
+import com.openrubicon.core.database.interfaces.DatabaseModel;
 import com.openrubicon.core.database.models.DiscordTextChannel;
+import com.openrubicon.core.database.models.Player;
 import com.openrubicon.core.events.EventListener;
 import com.openrubicon.core.events.FiveTickEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.core.api.vault.economy.Economy;
+import com.openrubicon.core.interfaces.Module;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -21,6 +25,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * RRPGCore
@@ -29,7 +34,7 @@ import java.io.File;
  * Contributors:
  *   - Quinn Bast
  */
-public class RRPGCore extends JavaPlugin {
+public class RRPGCore extends JavaPlugin implements Module {
 
     private final boolean devMode = true;      // Dev mode
     public static Configuration config;        // Configuration instance
@@ -46,6 +51,29 @@ public class RRPGCore extends JavaPlugin {
     public static boolean fatalError = false;
 
     @Override
+    public ArrayList<DatabaseModel> getDatabaseModels() {
+        ArrayList<DatabaseModel> models = new ArrayList<>();
+        models.add(new DiscordTextChannel());
+        models.add(new Player());
+        return models;
+    }
+
+    @Override
+    public String getKey() {
+        return "rrpg-core";
+    }
+
+    @Override
+    public String getOverview() {
+        return "The core of RRPG";
+    }
+
+    @Override
+    public String getConfiguration() {
+        return this.getDataFolder().getAbsolutePath();
+    }
+
+    @Override
     public void onLoad()
     {
         getLogger().info(Helpers.colorize(Configuration.PRIMARY_COLOR + "Beginning Loading Process.."));
@@ -58,6 +86,8 @@ public class RRPGCore extends JavaPlugin {
 
         RRPGCore.modules = new ModuleManager();
         getLogger().info("Established Module Provider.");
+
+        RRPGCore.modules.addModule(this);
     }
 
     @Override
@@ -241,7 +271,11 @@ public class RRPGCore extends JavaPlugin {
 
                 RRPGCore.database.setLoaded(true);
 
-                for(DiscordTextChannel channel : DiscordTextChannel.getChannels(RRPGCore.database.connection()))
+                getLogger().info("Completing Database Migrations if Any Exist..");
+                int count = new DatabaseMigrator(RRPGCore.modules.getDatabaseModels()).up(RRPGCore.database.connection());
+                getLogger().info("Completed migrating " + count + " database migrations.");
+
+                for(DiscordTextChannel channel : DiscordTextChannel.getChannels(RRPGCore.database.connection().get()))
                 {
                     MessageChannel ch = Discord.getApi().getTextChannelById(channel.getChannel_id());
                     DiscordEventTestListener.channels.add(ch);
