@@ -5,7 +5,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
-public class ExampleEconomy extends Economy {
+public final class ExampleEconomy extends Economy {
 
     public ExampleEconomy(Plugin plugin) {
         super(plugin);
