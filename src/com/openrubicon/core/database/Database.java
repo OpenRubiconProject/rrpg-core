@@ -14,6 +14,16 @@ public class Database {
     private static String host = "localhost";
     private static String port = "3306";
 
+    private boolean loaded = false;
+
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+    }
+
     public static void initialize(String host, String port, String username, String password, String name) {
         sql = new Sql2o("jdbc:mysql://" + host + ":" + port + "/" + name, username, password);
     }

@@ -1,13 +1,18 @@
 package com.openrubicon.core;
 
+import com.openrubicon.core.api.discord.Discord;
+import com.openrubicon.core.api.discord.DiscordEventTestListener;
 import com.openrubicon.core.configuration.Configuration;
 import com.openrubicon.core.connector.ConnectorServer;
 import com.openrubicon.core.database.Database;
+import com.openrubicon.core.database.models.DiscordTextChannel;
 import com.openrubicon.core.events.EventListener;
 import com.openrubicon.core.events.FiveTickEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.core.vault.Economy;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -16,7 +21,6 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.sql.Connection;
 
 /**
  * RRPGCore
@@ -30,9 +34,11 @@ public class RRPGCore extends JavaPlugin {
     private final boolean devMode = true;      // Dev mode
     public static Configuration config;        // Configuration instance
     public static ConnectorServer connector;   // Connector server
+    public static Discord discord;             // Discord server
     public static Permission permission;       // Vault permissions
-    public static Database database;         // Database connection
-    //public static DatabaseManager dbManager;   // Database manager
+    public static Chat chat;                   // Vault Chat
+    public static Database database;           // Database connection
+    //public static DatabaseManager dbManager; // Database manager
     public static Plugin plugin;               // Core plugin instance
 
     public static ModuleManager modules;       // Module manager
@@ -58,6 +64,7 @@ public class RRPGCore extends JavaPlugin {
     public void onDisable()
     {
         RRPGCore.connector.shutdown();
+        RRPGCore.discord.shutdown();
     }
 
     @Override
@@ -69,9 +76,12 @@ public class RRPGCore extends JavaPlugin {
         getLogger().info("Configuration loaded.");
 
         this.loadDatabase();
-        getLogger().info("Database connected");
+        //getLogger().info("Database connected");
 
         this.loadConnector(Configuration.CONNECTOR_PORT);
+
+        this.loadDiscord(Configuration.DISCORD_APP_TOKEN);
+
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         getLogger().info("Established Event Handler.");
@@ -89,6 +99,9 @@ public class RRPGCore extends JavaPlugin {
 
         this.setupPermissions();
         getLogger().info("Established Permissions");
+
+        this.setupChat();
+        getLogger().info("Established Chat");
 
         getLogger().info("Scheduling 5 Tick Event");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -226,10 +239,23 @@ public class RRPGCore extends JavaPlugin {
 
                 getLogger().info("Database Connection Established.");
 
+                RRPGCore.database.setLoaded(true);
+
+                for(DiscordTextChannel channel : DiscordTextChannel.getChannels(RRPGCore.database.connection()))
+                {
+                    MessageChannel ch = Discord.getApi().getTextChannelById(channel.getChannel_id());
+                    DiscordEventTestListener.channels.add(ch);
+                }
+
             }
 
         });
 
+    }
+
+    private void loadDiscord(String token)
+    {
+        RRPGCore.discord = new Discord(token);
     }
 
     public net.milkbowl.vault.economy.Economy registerEconomy(Economy econ)
@@ -265,6 +291,19 @@ public class RRPGCore extends JavaPlugin {
         }
 
         permission = permissionProvider.getProvider();
+    }
+
+    private void setupChat()
+    {
+        RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
+
+        if(chatProvider == null)
+        {
+            getLogger().severe("Vault is missing chat provider. Ensure you have the Vault API installed.");
+            return;
+        }
+
+        chat = chatProvider.getProvider();
     }
 
 

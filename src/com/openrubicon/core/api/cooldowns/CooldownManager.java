@@ -1,17 +1,15 @@
 package com.openrubicon.core.api.cooldowns;
 
 import com.openrubicon.core.configuration.Configuration;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 public class CooldownManager {
 
     private static HashSet<Cooldown> cooldowns = new HashSet<>();
+
+    public static HashSet<Cooldown> getCooldowns() {
+        return cooldowns;
+    }
 
     public static void passTime(int time)
     {
@@ -27,7 +25,95 @@ public class CooldownManager {
         }
     }
 
-    public static HashMap<LivingEntity, EntityCooldowns> getEntities() {
+    public static void start(Cooldown cooldown)
+    {
+        cooldown.setBypass(false);
+        CooldownManager.reset(cooldown);
+
+        if(!CooldownManager.cooldowns.contains(cooldown))
+        {
+            CooldownManager.cooldowns.add(cooldown);
+        }
+    }
+
+    public static void stop(Cooldown cooldown)
+    {
+        cooldown.setLocked(true);
+    }
+
+    public static void reset(Cooldown cooldown)
+    {
+        int reduction = cooldown.getCooldownReduction();
+        if(reduction > Configuration.COOLDOWN_REDUCTION_CAP)
+            reduction = Configuration.COOLDOWN_REDUCTION_CAP;
+
+        cooldown.setCurrent((int)(cooldown.getLength() - ((float)cooldown.getLength() * ((float)reduction / 100f))));
+        //Bukkit.broadcastMessage("CDR3:" + this.current);
+        if(cooldown.getCurrent() < 0)
+            cooldown.setCurrent(0);
+    }
+
+    public static void skip(Cooldown cooldown)
+    {
+        CooldownManager.reset(cooldown);
+    }
+
+    public static void resume(Cooldown cooldown)
+    {
+        cooldown.setBypass(false);
+        cooldown.setLocked(false);
+    }
+
+    public static void insta(Cooldown cooldown)
+    {
+        cooldown.setBypass(true);
+    }
+
+    public static void add(Cooldown cooldown)
+    {
+        CooldownManager.cooldowns.add(cooldown);
+    }
+
+    public static Cooldown remove(Cooldown cooldown)
+    {
+        Cooldown cooldownTemp = CooldownManager.get(cooldown);
+        CooldownManager.cooldowns.remove(cooldown);
+        return cooldownTemp;
+    }
+
+    public static Cooldown get(String id)
+    {
+        for(Cooldown cooldown : CooldownManager.cooldowns)
+        {
+            if(id.equals(cooldown.getId()))
+                return cooldown;
+        }
+        return null;
+    }
+
+    public static boolean has(Cooldown cooldown)
+    {
+        if(cooldown == null)
+            return false;
+        for(Cooldown cdown : CooldownManager.cooldowns)
+        {
+            if(cdown.getId().equals(cooldown.getId()))
+                return true;
+        }
+        return false;
+    }
+
+    public static Cooldown get(Cooldown cooldown)
+    {
+        for(Cooldown cdown : CooldownManager.cooldowns)
+        {
+            if(cdown.getId().equals(cooldown.getId()))
+                return cooldown;
+        }
+        return null;
+    }
+
+    /*public static HashMap<LivingEntity, EntityCooldowns> getEntities() {
         return entities;
     }
 
@@ -130,7 +216,7 @@ public class CooldownManager {
         CooldownManager.start(entity, cooldown, slot, 0);
     }*/
 
-    public static void start(LivingEntity entity, Cooldown cooldown, Inventory.SlotType slot)
+    /*public static void start(LivingEntity entity, Cooldown cooldown, Inventory.SlotType slot)
     {
         EntityInventory inventory = new EntityInventory(entity);
 
@@ -150,96 +236,24 @@ public class CooldownManager {
         //Bukkit.broadcastMessage("CDR1:" + cdr);
 
         CooldownManager.start(entity, cooldown, slot, cdr);
-    }
+    }*/
 
-    public static void start(Cooldown cooldown)
+
+
+    /*public static void addEntity(LivingEntity entity)
     {
-        cooldown.setBypass(false);
-        CooldownManager.reset(cooldown);
-
-        if(!CooldownManager.cooldowns.contains(cooldown))
-        {
-            CooldownManager.cooldowns.add(cooldown);
-        }
-    }
-
-    public static void stop(Cooldown cooldown)
-    {
-        cooldown.setLocked(true);
-    }
-
-    public static void reset(Cooldown cooldown)
-    {
-        int reduction = cooldown.getCooldownReduction();
-        if(reduction > Configuration.COOLDOWN_REDUCTION_CAP)
-            reduction = Configuration.COOLDOWN_REDUCTION_CAP;
-
-        cooldown.setCurrent((int)(cooldown.getLength() - ((float)cooldown.getLength() * ((float)reduction / 100f))));
-        //Bukkit.broadcastMessage("CDR3:" + this.current);
-        if(cooldown.getCurrent() < 0)
-            cooldown.setCurrent(0);
-    }
-
-    public static void resume(Cooldown cooldown)
-    {
-        cooldown.setBypass(false);
-        cooldown.setLocked(false);
-    }
-
-    public static void insta(Cooldown cooldown)
-    {
-        cooldown.setBypass(true);
-    }
-
-
-    public static void regsiter(Cooldown cooldown)
-    {
-        CooldownManager.add(cooldown);
-    }
-
-    public static void add(Cooldown cooldown)
-    {
-        CooldownManager.cooldowns.put(cooldown.getId(), cooldown);
-    }
-
-    public static Cooldown remove(Cooldown cooldown)
-    {
-        Cooldown cooldownTemp = CooldownManager.get(cooldown);
-        CooldownManager.cooldowns.remove(cooldown.getId(), cooldown);
-        return cooldownTemp;
-    }
-
-    public static Cooldown get(String id)
-    {
-        return CooldownManager.cooldowns.get(id);
-    }
-
-    public static boolean has(Cooldown cooldown)
-    {
-        if(cooldown == null)
-            return false;
-        return CooldownManager.cooldowns.containsKey(cooldown.getId());
-    }
-
-    public static Cooldown get(Cooldown cooldown)
-    {
-        return CooldownManager.cooldowns.get(cooldown.getId());
-    }
-
-    public static void addEntity(LivingEntity entity)
-    {
-        if(CooldownManager.entities.containsKey(entity))
+        if(CooldownManager.cooldowns.containsKey(entity))
             return;
 
         if(entity instanceof Player)
         {
-            CooldownManager.entities.put(entity, new PlayerCooldowns());
+            CooldownManager.cooldowns.put(entity, new PlayerCooldowns());
         } else {
-            CooldownManager.entities.put(entity, new EntityCooldowns());
+            CooldownManager.cooldowns.put(entity, new EntityCooldowns());
         }
 
 
-    }
+    }*/
 
 
 }

@@ -1,0 +1,167 @@
+package com.openrubicon.core.database.models;
+
+import org.sql2o.Connection;
+
+import java.util.Date;
+import java.util.List;
+
+public class Player {
+
+    private long id;
+    private String uuid;
+    private String username;
+    private String display_name;
+    private String email;
+    private String password;
+    private long discord_id;
+    private int verified;
+    private String token;
+    private Date last_joined;
+    private Date created_at;
+    private Date updated_at;
+    private Date deleted_at;
+
+    public Player(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Player(String uuid, String username, String display_name) {
+        this.uuid = uuid;
+        this.username = username;
+        this.display_name = display_name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getDisplay_name() {
+        return display_name;
+    }
+
+    public void setDisplay_name(String display_name) {
+        this.display_name = display_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public long getDiscord_id() {
+        return discord_id;
+    }
+
+    public void setDiscord_id(long discord_id) {
+        this.discord_id = discord_id;
+    }
+
+    public int getVerified() {
+        return verified;
+    }
+
+    public void setVerified(int verified) {
+        this.verified = verified;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getLast_joined() {
+        return last_joined;
+    }
+
+    public void setLast_joined(Date last_joined) {
+        this.last_joined = last_joined;
+    }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    public Date getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public Date getDeleted_at() {
+        return deleted_at;
+    }
+
+    public void setDeleted_at(Date deleted_at) {
+        this.deleted_at = deleted_at;
+    }
+
+    public static List<Player> getPlayers(Connection connection)
+    {
+        return connection.createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null").executeAndFetch(Player.class);
+    }
+
+    public static void insertPlayer(Connection connection, Player player)
+    {
+        String sql = "INSERT INTO rubicon_players (uuid, username, display_name) VALUES (:uuid, :username, :display_name)";
+
+        connection.createQuery(sql, true).bind(player).executeUpdate().getKey();
+    }
+
+    public static Player getPlayer(Connection connection, Player player)
+    {
+        List<Player> p = connection.createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(player).executeAndFetch(Player.class);
+        return p.get(0);
+    }
+
+    public static boolean isPlayerExist(Connection connection, Player player)
+    {
+        return connection.createQuery("SELECT count(id) FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(player).executeScalar(Integer.class) >= 1;
+    }
+
+    public static void updatePlayer(Connection connection, Player player)
+    {
+        String sql = "UPDATE rubicon_players SET display_name = :display_name, username = :username, last_joined = :last_joined, token = :token, discord_id = :discord_id, verified = :verified WHERE id = :id";
+
+        connection.createQuery(sql).bind(player).executeUpdate();
+    }
+}

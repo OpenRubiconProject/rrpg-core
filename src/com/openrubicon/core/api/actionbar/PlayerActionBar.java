@@ -1,12 +1,13 @@
 package com.openrubicon.core.api.actionbar;
 
+import com.openrubicon.core.api.cooldowns.CooldownManager;
 import org.bukkit.entity.Player;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class PlayerActionBar {
     private Player player;
-    private LinkedBlockingQueue<ActionBarMessage> messages = new LinkedBlockingQueue<>();
+    private LinkedBlockingDeque<ActionBarMessage> messages = new LinkedBlockingDeque<>();
     private ActionBarCooldown cooldown;
 
     public PlayerActionBar(Player player) {
@@ -14,7 +15,7 @@ public class PlayerActionBar {
         this.initializeCooldown();
     }
 
-    public PlayerActionBar(Player player, LinkedBlockingQueue<ActionBarMessage> messages) {
+    public PlayerActionBar(Player player, LinkedBlockingDeque<ActionBarMessage> messages) {
         this.player = player;
         this.messages = messages;
         this.initializeCooldown();
@@ -23,7 +24,7 @@ public class PlayerActionBar {
     private void initializeCooldown()
     {
         this.cooldown = new ActionBarCooldown(this.player.getUniqueId().toString(), "player");
-        CooldownManager.regsiter(this.cooldown);
+        CooldownManager.add(this.cooldown);
     }
 
     public Player getPlayer() {
@@ -34,11 +35,11 @@ public class PlayerActionBar {
         this.player = player;
     }
 
-    public LinkedBlockingQueue<ActionBarMessage> getMessages() {
+    public LinkedBlockingDeque<ActionBarMessage> getMessages() {
         return messages;
     }
 
-    public void setMessages(LinkedBlockingQueue<ActionBarMessage> messages) {
+    public void setMessages(LinkedBlockingDeque<ActionBarMessage> messages) {
         this.messages = messages;
     }
 
@@ -68,6 +69,11 @@ public class PlayerActionBar {
         }
 
         return null;
+    }
+
+    public void addStart(ActionBarMessage message)
+    {
+        this.messages.addFirst(message);
     }
 
     public ActionBarMessage getNext()

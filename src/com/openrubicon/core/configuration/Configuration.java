@@ -36,6 +36,8 @@ public class Configuration {
     public static String DB_PASS = "";
     public static String DB_NAME = "";
 
+    public static String DISCORD_APP_TOKEN = "";
+
     public static int CONNECTOR_PORT = 5369;
 
     public static FileConfiguration config = null;
@@ -80,6 +82,7 @@ public class Configuration {
         Configuration.DB_PASS = this.get("db-password", DB_PASS);
         Configuration.DB_NAME = this.get("db-name", DB_NAME);
         Configuration.CONNECTOR_PORT = this.get("connector-port", CONNECTOR_PORT);
+        Configuration.DISCORD_APP_TOKEN = this.get("discord-app-token", DISCORD_APP_TOKEN);
 
         // In order to add the entries to the config if it hasn't been built before
         if(this.configBuildChanged)
@@ -116,21 +119,33 @@ public class Configuration {
     private String get(String key, String defaultValue)
     {
         String val = Configuration.config.getString(key, defaultValue);
-        Configuration.config.set(key, val);
+        if(!Configuration.config.contains(key))
+        {
+            Configuration.config.set(key, val);
+            this.configBuildChanged = true;
+        }
         return val;
     }
 
     private int get(String key, int defaultValue)
     {
         int val = Configuration.config.getInt(key, defaultValue);
-        Configuration.config.set(key, val);
+        if(!Configuration.config.contains(key))
+        {
+            Configuration.config.set(key, val);
+            this.configBuildChanged = true;
+        }
         return val;
     }
 
     private long get(String key, long defaultValue)
     {
         long val = Configuration.config.getLong(key, defaultValue);
-        Configuration.config.set(key, val);
+        if(!Configuration.config.contains(key))
+        {
+            Configuration.config.set(key, val);
+            this.configBuildChanged = true;
+        }
         return val;
     }
 

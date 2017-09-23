@@ -1,86 +1,61 @@
 package com.openrubicon.core.api.actionbar;
 
+import com.openrubicon.core.helpers.Helpers;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
-public class ActionBarManager {
+public final class ActionBarManager {
 
-    protected static HashMap<Player, PlayerActionBar> playerMessages = new HashMap<>();
-
-    public ActionBarManager()
-    {
-
-    }
+    protected static HashMap<Player, PlayerActionBar> playerActionBars = new HashMap<>();
 
     public static void process()
     {
-        for(PlayerActionBar actionBars : ActionBarManager.playerMessages.values())
+        for(PlayerActionBar actionBar : ActionBarManager.playerActionBars.values())
         {
-            if(actionBars.getCooldown().isCooldown())
+            if(actionBar.getCooldown().isCooldown())
                 continue;
 
-            if(CooldownManager.getEntities().get(actionBars.getPlayer()) != null)
-            {
-                CooldownManager.getEntities().get(actionBars.getPlayer()).clean();
-
-                if(actionBars.getMessages().isEmpty() && !CooldownManager.getEntities().get(actionBars.getPlayer()).hasCooldowns())
-                    continue;
-            }
-
-            if(actionBars.getMessages().isEmpty() || (CombatManager.isInCombat(actionBars.getPlayer()) && actionBars.getNext().getPriority().isLower(Priority.HIGH)))
-            {
-                if(CooldownManager.getEntities().get(actionBars.getPlayer()) != null && CooldownManager.getEntities().get(actionBars.getPlayer()) instanceof PlayerCooldowns)
-                {
-                    //Bukkit.broadcastMessage("BOB IS A BOOB");
-                    PlayerCooldowns playerCooldowns = (PlayerCooldowns)CooldownManager.getEntities().get(actionBars.getPlayer());
-                    actionBars.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Helpers.colorize(Configuration.HEADING_COLOR + Configuration.BOLD + "Cooldowns: " + Configuration.RESET_FORMAT + playerCooldowns.getActionbar())));
-                    actionBars.getCooldown().setLength(10);
-                }
-
+            ActionBarMessage abMessage = actionBar.remove();
+            if(abMessage == null)
                 continue;
-            } else {
-                actionBars.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Helpers.colorize(actionBars.remove().getMessage())));
-                actionBars.getCooldown().setLength(60);
-            }
 
-            CooldownManager.start(actionBars.getCooldown());
+            actionBar.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Helpers.colorize(abMessage.getMessage())));
+            actionBar.getCooldown().setLength(abMessage.getLength());
+            ActionBarCooldownManager.start(actionBar.getCooldown());
         }
     }
 
-    public static void interrupt(Player player, String message)
+    public static void interrupt(Player player, ActionBarMessage message)
     {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Helpers.colorize(message)));
+        ActionBarManager.queueMessage(player, message);
 
-        if(!ActionBarManager.playerMessages.containsKey(player))
-            ActionBarManager.playerMessages.put(player, new PlayerMessages(player));
+        ActionBarCooldown cooldown = ActionBarCooldownManager.getActionBar(player);
+        if(cooldown == null)
+            return;
 
-        ActionBarManager.playerMessages.get(player).getCooldown().setLength(10);
-        CooldownManager.start(ActionBarManager.playerMessages.get(player).getCooldown());
+        ActionBarCooldownManager.skip(cooldown);
     }
 
-    public static void queueMessage(Player player, Message message)
+    public static void queueMessage(Player player, ActionBarMessage message)
     {
-        if(!ActionBarManager.playerMessages.containsKey(player))
-            ActionBarManager.playerMessages.put(player, new PlayerMessages(player));
+        ActionBarManager.addPlayer(player);
 
-        ActionBarManager.playerMessages.get(player).add(message);
-
-        //CooldownManager.start(ActionBarManager.playerMessages.get(player).getCooldown());
+        ActionBarManager.playerActionBars.get(player).add(message);
     }
 
     public static void addPlayer(Player player)
     {
-        if(!ActionBarManager.playerMessages.containsKey(player))
-            ActionBarManager.playerMessages.put(player, new PlayerActionBar(player));
+        if(!ActionBarManager.playerActionBars.containsKey(player))
+            ActionBarManager.playerActionBars.put(player, new PlayerActionBar(player));
     }
 
     public static void removePlayer(Player player)
     {
-        if(ActionBarManager.playerMessages.containsKey(player))
-            ActionBarManager.playerMessages.remove(player);
+        if(ActionBarManager.playerActionBars.containsKey(player))
+            ActionBarManager.playerActionBars.remove(player);
     }
 
 }

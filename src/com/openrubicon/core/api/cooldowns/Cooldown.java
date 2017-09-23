@@ -3,8 +3,7 @@ package com.openrubicon.core.api.cooldowns;
 import com.openrubicon.core.configuration.Configuration;
 
 abstract public class Cooldown {
-
-
+    
     private String moduleName = "default";
 
     private int length = 20;

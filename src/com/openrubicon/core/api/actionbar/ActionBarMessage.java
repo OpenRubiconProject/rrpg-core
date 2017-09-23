@@ -7,6 +7,7 @@ public class ActionBarMessage {
 
     private String message;
     private Priority priority;
+    private int length = 60;
 
     public ActionBarMessage()
     {
@@ -22,6 +23,25 @@ public class ActionBarMessage {
     public ActionBarMessage(String message, Priority priority) {
         this.message = message;
         this.priority = priority;
+    }
+
+    public ActionBarMessage(String message, int length) {
+        this.message = message;
+        this.length = length;
+    }
+
+    public ActionBarMessage(String message, Priority priority, int length) {
+        this.message = message;
+        this.priority = priority;
+        this.length = length;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 
     public String getMessage() {
