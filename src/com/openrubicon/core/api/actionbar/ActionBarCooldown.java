@@ -9,6 +9,5 @@ public class ActionBarCooldown extends EntityCooldown {
         this.setLength(10);
         this.setModuleName("actionbar");
         this.setId(id, modifier);
-
     }
 }

@@ -116,7 +116,7 @@ abstract public class Cooldown {
         this.length = seconds * 20;
     }
 
-    public boolean isCooldown()
+    public boolean isOnCooldown()
     {
         if(this.bypass)
             return false;

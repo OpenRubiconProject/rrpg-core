@@ -155,4 +155,5 @@ public class Configuration {
         Configuration.LATEST_ITEM_ID++;
         return latest;
     }
+
 }

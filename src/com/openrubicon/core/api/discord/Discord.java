@@ -1,5 +1,7 @@
 package com.openrubicon.core.api.discord;
 
+import com.openrubicon.core.interfaces.Errorable;
+import com.openrubicon.core.interfaces.Startable;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -7,20 +9,16 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
 
-public class Discord {
+public class Discord implements Errorable, Startable {
 
     private static JDA api;
     private static String token = "";
 
+    private boolean errored = false;
+
     public Discord(String token) {
         Discord.token = token;
-        try {
-            Discord.api = new JDABuilder(AccountType.BOT).setToken(Discord.token).addEventListener(new DiscordEventTestListener()).buildAsync();
-        } catch (LoginException e) {
-            e.printStackTrace();
-        } catch (RateLimitedException e) {
-            e.printStackTrace();
-        }
+        this.start();
     }
 
     public void shutdown()
@@ -28,7 +26,26 @@ public class Discord {
         Discord.api.shutdownNow();
     }
 
+    public void start()
+    {
+        try {
+            Discord.api = new JDABuilder(AccountType.BOT).setToken(Discord.token).addEventListener(new DiscordEventTestListener()).buildAsync();
+            errored = false;
+        } catch (LoginException e) {
+            e.printStackTrace();
+            errored = true;
+        } catch (RateLimitedException e) {
+            e.printStackTrace();
+            errored = true;
+        }
+    }
+
     public static JDA getApi() {
         return api;
+    }
+
+    @Override
+    public boolean isErrored() {
+        return this.errored;
     }
 }

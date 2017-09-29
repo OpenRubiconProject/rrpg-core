@@ -1,15 +1,10 @@
 package com.openrubicon.core.events;
 
-import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
-import com.openrubicon.core.database.models.Player;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-
-import java.util.Date;
 
 public class EventListener implements Listener {
 

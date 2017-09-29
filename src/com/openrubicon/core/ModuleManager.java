@@ -1,6 +1,7 @@
 package com.openrubicon.core;
 
-import com.openrubicon.core.database.interfaces.DatabaseModel;
+import com.openrubicon.core.api.command.Command;
+import com.openrubicon.core.api.database.interfaces.DatabaseModel;
 import com.openrubicon.core.interfaces.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -69,5 +70,16 @@ public class ModuleManager {
             models.addAll(((Module)module).getDatabaseModels());
         }
         return models;
+    }
+
+    public ArrayList<Command> getCommands()
+    {
+        ArrayList<Command> commands = new ArrayList<>();
+        for(JavaPlugin module : this.getModules().values())
+        {
+            if(module.getName().equals("RRPGCore"))
+            commands.addAll(((Module)module).getCommands());
+        }
+        return commands;
     }
 }

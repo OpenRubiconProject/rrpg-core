@@ -1,6 +1,6 @@
 package com.openrubicon.core.api.inventory;
 
-import com.openrubicon.core.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.enums.InventorySlotType;
 import org.bukkit.inventory.ItemStack;
 
 abstract public class Inventory {

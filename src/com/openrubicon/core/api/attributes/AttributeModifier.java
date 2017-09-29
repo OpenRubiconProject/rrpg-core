@@ -1,6 +1,6 @@
 package com.openrubicon.core.api.attributes;
 
-import com.openrubicon.core.enums.AttributeModifierType;
+import com.openrubicon.core.api.attributes.enums.AttributeModifierType;
 
 import java.util.UUID;
 

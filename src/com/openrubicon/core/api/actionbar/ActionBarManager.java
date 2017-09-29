@@ -15,7 +15,7 @@ public final class ActionBarManager {
     {
         for(PlayerActionBar actionBar : ActionBarManager.playerActionBars.values())
         {
-            if(actionBar.getCooldown().isCooldown())
+            if(actionBar.getCooldown().isOnCooldown())
                 continue;
 
             ActionBarMessage abMessage = actionBar.remove();

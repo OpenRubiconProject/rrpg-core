@@ -1,6 +1,9 @@
 package com.openrubicon.core.api.cooldowns;
 
+import com.openrubicon.core.api.cooldowns.events.CooldownCompletedEvent;
 import com.openrubicon.core.configuration.Configuration;
+import org.bukkit.Bukkit;
+
 import java.util.HashSet;
 
 public class CooldownManager {
@@ -17,11 +20,18 @@ public class CooldownManager {
         {
             if(cooldown.isLocked())
                 return;
+
             if(cooldown.getCurrent() == 0)
                 return;
+
             cooldown.setCurrent(cooldown.getCurrent() - time);
+
             if(cooldown.getCurrent() < 0)
                 cooldown.setCurrent(0);
+
+            if(cooldown.getCurrent() == 0)
+                Bukkit.getPluginManager().callEvent(new CooldownCompletedEvent(cooldown));
+
         }
     }
 
@@ -112,148 +122,5 @@ public class CooldownManager {
         }
         return null;
     }
-
-    /*public static HashMap<LivingEntity, EntityCooldowns> getEntities() {
-        return entities;
-    }
-
-    public static void setEntities(HashMap<LivingEntity, EntityCooldowns> entities) {
-        CooldownManager.entities = entities;
-    }
-
-    public static HashSet<Cooldown> getSystemCooldowns() {
-        return systemCooldowns;
-    }
-
-    public static void setSystemCooldowns(LinkedHashSet<Cooldown> systemCooldowns) {
-        CooldownManager.systemCooldowns = systemCooldowns;
-    }
-
-    public static void addCooldownFromEntity(LivingEntity entity, ItemStack i, Inventory.SlotType slot)
-    {
-        FullItem item = new FullItem(i);
-        CooldownManager.addCooldownFromEntity(entity, item, slot);
-    }
-
-    public static void addCooldownFromEntity(LivingEntity entity, FullItem item, Inventory.SlotType slot)
-    {
-        if(!item.isSpecialItem())
-            return;
-
-        for(Socket socket : item.getSockets().getSockets().values())
-        {
-            if(!socket.isUsingCooldown())
-                continue;
-
-            CooldownManager.addCooldownFromEntity(entity, socket.getCooldown(), slot);
-        }
-    }
-
-    public static void addCooldownFromEntity(LivingEntity entity, Cooldown cooldown, Inventory.SlotType slot)
-    {
-        //if(cooldown.isCooldown())
-        //return;
-
-        CooldownManager.addEntity(entity);
-
-
-        CooldownManager.getEntities().get(entity).add(cooldown.getId(), cooldown, slot);
-    }
-
-    public static void removeCooldownFromEntity(LivingEntity entity, ItemStack i)
-    {
-        FullItem item = new FullItem(i);
-        CooldownManager.removeCooldownFromEntity(entity, item);
-    }
-
-    public static void removeCooldownFromEntity(LivingEntity entity, FullItem item)
-    {
-        if(!item.isSpecialItem())
-            return;
-
-        for(Socket socket : item.getSockets().getSockets().values())
-        {
-            if(!socket.isUsingCooldown())
-                continue;
-
-            CooldownManager.removeCooldownFromEntity(entity, socket.getCooldown());
-        }
-    }
-
-    public static void removeCooldownFromEntity(LivingEntity entity, Cooldown cooldown)
-    {
-        CooldownManager.addEntity(entity);
-
-        CooldownManager.getEntities().get(entity).remove(cooldown.getId());
-    }
-
-    public static void start(LivingEntity entity, Cooldown cooldown, Inventory.SlotType slot, int cdr)
-    {
-        LivingEntityInventory inventory = new LivingEntityInventory(entity);
-
-        for(FullItem item : inventory.getArmorWithSocket(new CooldownReduction()))
-        {
-            CooldownReduction socket = (CooldownReduction)item.getSockets().get(new CooldownReduction());
-            cdr += socket.getCDR();
-        }
-        //Bukkit.broadcastMessage("CDR2:" + cdr);
-        cooldown.setCooldownReduction(cdr);
-
-        cooldown.start();
-
-        CooldownManager.addEntity(entity);
-
-        EntityCooldowns entitiesCooldowns = CooldownManager.entities.get(entity);
-
-        entitiesCooldowns.add(cooldown.getId(), cooldown, slot);
-
-        //Bukkit.broadcastMessage(entity.getName());
-        //Bukkit.broadcastMessage(cooldown.getId());
-    }
-
-    /*public static void start(LivingEntity entity, Cooldown cooldown, Inventory.SlotType slot)
-    {
-        CooldownManager.start(entity, cooldown, slot, 0);
-    }*/
-
-    /*public static void start(LivingEntity entity, Cooldown cooldown, Inventory.SlotType slot)
-    {
-        LivingEntityInventory inventory = new LivingEntityInventory(entity);
-
-        FullItem item = new FullItem(inventory.getSlot(slot));
-
-        int cdr = 0;
-
-        if(item.isSpecialItem() && item.isValid())
-        {
-            if(item.getSockets().has(new Spam()))
-            {
-                Spam socket = (Spam)item.getSockets().get(new Spam());
-                cdr += socket.getCDR();
-            }
-        }
-
-        //Bukkit.broadcastMessage("CDR1:" + cdr);
-
-        CooldownManager.start(entity, cooldown, slot, cdr);
-    }*/
-
-
-
-    /*public static void addEntity(LivingEntity entity)
-    {
-        if(CooldownManager.cooldowns.containsKey(entity))
-            return;
-
-        if(entity instanceof Player)
-        {
-            CooldownManager.cooldowns.put(entity, new PlayerCooldowns());
-        } else {
-            CooldownManager.cooldowns.put(entity, new EntityCooldowns());
-        }
-
-
-    }*/
-
 
 }

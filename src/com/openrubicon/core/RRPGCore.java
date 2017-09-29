@@ -1,21 +1,29 @@
 package com.openrubicon.core;
 
+import com.openrubicon.core.api.command.Command;
+import com.openrubicon.core.api.command.CommandService;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
+import com.openrubicon.core.api.interactables.Console;
 import com.openrubicon.core.api.reflection.Reflection;
+import com.openrubicon.core.commands.ConfigGet;
+import com.openrubicon.core.commands.ConnectorRestart;
+import com.openrubicon.core.commands.DiscordRestart;
+import com.openrubicon.core.commands.RRPG;
 import com.openrubicon.core.configuration.Configuration;
-import com.openrubicon.core.connector.ConnectorServer;
-import com.openrubicon.core.database.Database;
-import com.openrubicon.core.database.DatabaseMigrator;
-import com.openrubicon.core.database.interfaces.DatabaseModel;
-import com.openrubicon.core.database.models.DiscordTextChannel;
-import com.openrubicon.core.database.models.Player;
+import com.openrubicon.core.api.connector.ConnectorServer;
+import com.openrubicon.core.api.database.Database;
+import com.openrubicon.core.api.database.DatabaseMigrator;
+import com.openrubicon.core.api.database.interfaces.DatabaseModel;
+import com.openrubicon.core.api.database.models.DiscordTextChannel;
+import com.openrubicon.core.api.database.models.Player;
 import com.openrubicon.core.events.EventListener;
 import com.openrubicon.core.events.FiveTickEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.core.api.vault.economy.Economy;
 import com.openrubicon.core.interfaces.Module;
+import com.openrubicon.core.api.services.ServiceManager;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -56,6 +64,7 @@ import java.util.ArrayList;
  *      - Add system for pirate protection
  *      - Build server API which Discord, Connector, Modules, and Web can hook into. Shows stats like current/max players, whos online, etc.
  *      - Build management API which Discord, Connector, Modules, and Web can hook into
+ *      - Create event hooks for triggering the custom events
  *
  *
  */
@@ -70,11 +79,13 @@ public class RRPGCore extends JavaPlugin implements Module {
     public static Database database;           // Database connection
     public static Plugin plugin;               // Core plugin instance
 
-    public static Reflection reflection;
+    public static ServiceManager services;     // Service Manager
+
+    public static Reflection reflection;       // Reflection API
 
     public static ModuleManager modules;       // Module manager
 
-    public static boolean fatalError = false;
+    public static boolean fatalError = false;  // Loading fatal error flag
 
     @Override
     public ArrayList<DatabaseModel> getDatabaseModels() {
@@ -82,6 +93,16 @@ public class RRPGCore extends JavaPlugin implements Module {
         models.add(new DiscordTextChannel());
         models.add(new Player());
         return models;
+    }
+
+    @Override
+    public ArrayList<Command> getCommands() {
+        ArrayList<Command> commands = new ArrayList<>();
+        commands.add(new DiscordRestart());
+        commands.add(new ConnectorRestart());
+        commands.add(new ConfigGet());
+        commands.add(new RRPG());
+        return commands;
     }
 
     @Override
@@ -108,9 +129,13 @@ public class RRPGCore extends JavaPlugin implements Module {
         this.establishConfig();
 
         MaterialGroups.initialize();
-        getLogger().info("Material Groups Loaded..");
+        getLogger().info("Established Material Groups..");
 
         RRPGCore.reflection = new Reflection();
+        getLogger().info("Established Reflection API.");
+
+        RRPGCore.services = new ServiceManager();
+        getLogger().info("Established Service Manager.");
 
         RRPGCore.modules = new ModuleManager();
         getLogger().info("Established Module Provider.");
@@ -140,10 +165,10 @@ public class RRPGCore extends JavaPlugin implements Module {
 
         this.loadDiscord(Configuration.DISCORD_APP_TOKEN);
 
+        this.loadServices();
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         getLogger().info("Established Event Handler.");
-
 
         if (!Bukkit.getPluginManager().isPluginEnabled("Vault"))
         {
@@ -178,7 +203,6 @@ public class RRPGCore extends JavaPlugin implements Module {
             }
         }, 6000, 6000);
 
-
     }
 
     /**
@@ -191,13 +215,10 @@ public class RRPGCore extends JavaPlugin implements Module {
             @Override
             public void run() {
                 getLogger().info("Connector Server Starting on port " + connectorPort + "...");
-                try {
-                    RRPGCore.connector = new ConnectorServer(5369);
-                    RRPGCore.connector.run();
-                } catch (Exception e) {
-                    getLogger().warning("Connector Failed while starting.");
-                    e.printStackTrace();
-                }
+
+                RRPGCore.connector = new ConnectorServer(5369);
+                RRPGCore.connector.start();
+
                 getLogger().info("Connector Started.");
             }
         });
@@ -252,54 +273,11 @@ public class RRPGCore extends JavaPlugin implements Module {
                 Database.initialize(host, port, username, password, name);
 
                 RRPGCore.database = new Database();
-
-
-
-                /*try {
-                    if (RRPGCore.database != null && !RRPGCore.database.isClosed()) {
-                        return;
-                    }
-
-                    synchronized (this) {
-                        if (RRPGCore.database != null && !RRPGCore.database.isClosed()) {
-                            return;
-                        }
-
-                        try { //We use a try catch to avoid errors, hopefully we don't get any.
-                            Class.forName("com.mysql.jdbc.Driver"); //this accesses Driver in jdbc.
-                        } catch (ClassNotFoundException e) {
-                            getLogger().warning("JBDC Driver Unavailable. Check your system configuration.");
-                            e.printStackTrace();
-                            return;
-                        }
-                        try { //Another try catch to get any SQL errors (for example connections errors)
-
-
-                            RRPGCore.database = DriverManager.getConnection(url, username, password);
-                            //RRPGCore.database = DriverManager.getConnection("", "", "");
-
-
-                            //with the method getConnection() from DriverManager, we're trying to set
-                            //the connection's url, username, password to the variables we made earlier and
-                            //trying to get a connection at the same time. JDBC allows us to do this.
-
-
-                        } catch (SQLException e) { //catching errors)
-                            getLogger().info("Database Connection Failed.");
-                            e.printStackTrace(); //prints out SQLException errors to the console (if any)
-                        }
-
-                    }
-                } catch (SQLException e){
-                    getLogger().warning("A Database Problem Occurred. Check your system configuration.");
-                    e.printStackTrace();
-                }*/
-
                 getLogger().info("Database Connection Established.");
 
                 RRPGCore.database.setLoaded(true);
 
-                getLogger().info("Completing Database Migrations if Any Exist..");
+                getLogger().info("Running Database Migrations if Any Exist..");
                 int count = new DatabaseMigrator(RRPGCore.modules.getDatabaseModels()).up(RRPGCore.database.connection());
                 getLogger().info("Completed migrating " + count + " database migrations.");
 
@@ -318,6 +296,14 @@ public class RRPGCore extends JavaPlugin implements Module {
     private void loadDiscord(String token)
     {
         RRPGCore.discord = new Discord(token);
+    }
+
+    private void loadServices()
+    {
+        getLogger().info("Establishing Services..");
+        RRPGCore.services.create(new CommandService(this, RRPGCore.modules.getCommands()));
+
+        getLogger().info("Established Services.");
     }
 
     public net.milkbowl.vault.economy.Economy registerEconomy(Economy econ)

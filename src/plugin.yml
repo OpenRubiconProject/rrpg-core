@@ -6,6 +6,15 @@ depend: [Vault]
 database: true
 website: https://github.com/OpenRubiconProject
 commands:
-      rubicon:
+      rrpg:
                description: Spits out the current status of Rubicon and its versions
-               usage: /rubicon
+               usage: /rrpg
+      rrpg discord restart:
+               description: Restarts Discord
+               usage: /rrpg restart discord
+      rrpg connector restart:
+               description: Restarts Connector
+               usage: /rrpg restart connector
+      rrpg config get <Key>:
+               description: Retrieves the value of a configuration key
+               usage: /rrpg config get <Config Key>

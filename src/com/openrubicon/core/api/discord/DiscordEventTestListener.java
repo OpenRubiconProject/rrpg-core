@@ -1,20 +1,9 @@
 package com.openrubicon.core.api.discord;
 
-import com.openrubicon.core.RRPGCore;
-import com.openrubicon.core.configuration.Configuration;
-import com.openrubicon.core.database.models.DiscordTextChannel;
-import com.openrubicon.core.helpers.Helpers;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.apache.commons.lang.RandomStringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.sql2o.Connection;
 
 import java.util.HashSet;
-import java.util.UUID;
 
 public class DiscordEventTestListener extends ListenerAdapter {
 
@@ -75,14 +64,14 @@ public class DiscordEventTestListener extends ListenerAdapter {
             {
                 if(player.getName().equals(playerName))
                 {
-                    if(com.openrubicon.core.database.models.Player.isPlayerExist(RRPGCore.database.connection(), new com.openrubicon.core.database.models.Player(player.getUniqueId().toString())))
+                    if(Player.isPlayerExist(RRPGCore.database.connection(), new Player(player.getUniqueId().toString())))
                     {
-                        com.openrubicon.core.database.models.Player p = com.openrubicon.core.database.models.Player.getPlayer(RRPGCore.database.connection(), new com.openrubicon.core.database.models.Player(player.getUniqueId().toString()));
+                        Player p = Player.getPlayer(RRPGCore.database.connection(), new Player(player.getUniqueId().toString()));
                         Bukkit.broadcastMessage(p.getUuid());
                         String token = RandomStringUtils.randomAlphanumeric(10);
                         p.setToken(token);
                         p.setDiscord_id(event.getAuthor().getIdLong());
-                        com.openrubicon.core.database.models.Player.updatePlayer(RRPGCore.database.connection(), p);
+                        Player.updatePlayer(RRPGCore.database.connection(), p);
                         player.sendMessage("Your secret token is: " + token);
                     }
                 }
@@ -90,7 +79,7 @@ public class DiscordEventTestListener extends ListenerAdapter {
 
         } else if(content.length() > 16 && content.substring(0,16).equals("!rubicon-verify ")) {
             String token = content.substring(16);
-            for(com.openrubicon.core.database.models.Player player : com.openrubicon.core.database.models.Player.getPlayers(RRPGCore.database.connection()))
+            for(Player player : Player.getPlayers(RRPGCore.database.connection()))
             {
                 if(player.getToken().equals(token) && !token.equals(""))
                 {
@@ -98,7 +87,7 @@ public class DiscordEventTestListener extends ListenerAdapter {
                     {
                         player.setToken("");
                         player.setVerified(1);
-                        com.openrubicon.core.database.models.Player.updatePlayer(RRPGCore.database.connection(), player);
+                        Player.updatePlayer(RRPGCore.database.connection(), player);
                         Bukkit.broadcastMessage("THIS VERIFIED");
                     }
                 }
@@ -106,7 +95,7 @@ public class DiscordEventTestListener extends ListenerAdapter {
 
         } else if(!content.substring(0, 1).equals("!"))
         {
-            for(com.openrubicon.core.database.models.Player player : com.openrubicon.core.database.models.Player.getPlayers(RRPGCore.database.connection()))
+            for(Player player : Player.getPlayers(RRPGCore.database.connection()))
             {
                 Bukkit.broadcastMessage(Helpers.colorize(Configuration.PRIMARY_COLOR+"<"+ player.getDisplay_name()+Configuration.PRIMARY_COLOR+"> " + Configuration.RESET_FORMAT + event.getMessage().getContent()));
             }
