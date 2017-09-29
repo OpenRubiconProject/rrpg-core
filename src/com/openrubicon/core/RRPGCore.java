@@ -2,6 +2,7 @@ package com.openrubicon.core;
 
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
+import com.openrubicon.core.api.reflection.Reflection;
 import com.openrubicon.core.configuration.Configuration;
 import com.openrubicon.core.connector.ConnectorServer;
 import com.openrubicon.core.database.Database;
@@ -33,6 +34,30 @@ import java.util.ArrayList;
  * Created by Shawn Clake
  * Contributors:
  *   - Quinn Bast
+ *
+ *   TODO:
+ *      - Discord Integration (Authentication, communication each way, commands)
+ *      - Make configuration modular (Other modules should see main config)
+ *      - Make a decision on porting over durability, elements, rarity, modification (Anvil)
+ *      - Build authentication API
+ *      - Port over the combat API
+ *      - Potentially port over some events other events: PlayerLandOnGround, PlayerLookingAtEntity etc.
+ *      - Create an API bridge for Vault perms and chat
+ *      - Make Connector do something (RESTful API which interacts real time with server)
+ *      - Make a stat tracking API
+ *      - Add commands for altering configuration values and debug. Also for rebooting the Discord, Database, and Connector configurations.
+ *      - Finish Database Query Builder
+ *      - Finish HorseInventory
+ *      - Move Enums to better directories
+ *      - Create additional extension classes like ExampleEconomy
+ *      - Document each class and build a JavaDoc
+ *      - Add system for tracking user display name changes, last played time, and total time played
+ *      - Add optional register server with Rubicon system. This will provide a unique server ID and token
+ *      - Add system for pirate protection
+ *      - Build server API which Discord, Connector, Modules, and Web can hook into. Shows stats like current/max players, whos online, etc.
+ *      - Build management API which Discord, Connector, Modules, and Web can hook into
+ *
+ *
  */
 public class RRPGCore extends JavaPlugin implements Module {
 
@@ -43,8 +68,9 @@ public class RRPGCore extends JavaPlugin implements Module {
     public static Permission permission;       // Vault permissions
     public static Chat chat;                   // Vault Chat
     public static Database database;           // Database connection
-    //public static DatabaseManager dbManager; // Database manager
     public static Plugin plugin;               // Core plugin instance
+
+    public static Reflection reflection;
 
     public static ModuleManager modules;       // Module manager
 
@@ -83,6 +109,8 @@ public class RRPGCore extends JavaPlugin implements Module {
 
         MaterialGroups.initialize();
         getLogger().info("Material Groups Loaded..");
+
+        RRPGCore.reflection = new Reflection();
 
         RRPGCore.modules = new ModuleManager();
         getLogger().info("Established Module Provider.");
@@ -275,7 +303,7 @@ public class RRPGCore extends JavaPlugin implements Module {
                 int count = new DatabaseMigrator(RRPGCore.modules.getDatabaseModels()).up(RRPGCore.database.connection());
                 getLogger().info("Completed migrating " + count + " database migrations.");
 
-                for(DiscordTextChannel channel : DiscordTextChannel.getChannels(RRPGCore.database.connection().get()))
+                for(DiscordTextChannel channel : DiscordTextChannel.getChannels(RRPGCore.database.connection()))
                 {
                     MessageChannel ch = Discord.getApi().getTextChannelById(channel.getChannel_id());
                     DiscordEventTestListener.channels.add(ch);

@@ -20,7 +20,7 @@ public class DiscordEventTestListener extends ListenerAdapter {
 
     public static HashSet<MessageChannel> channels = new HashSet<>();
 
-    @Override
+    /*@Override
     public void onMessageReceived(MessageReceivedEvent event)
     {
         if (event.getAuthor().isBot()) return;
@@ -112,5 +112,5 @@ public class DiscordEventTestListener extends ListenerAdapter {
             }
 
         }
-    }
+    }*/
 }

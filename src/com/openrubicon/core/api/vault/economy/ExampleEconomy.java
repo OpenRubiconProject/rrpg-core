@@ -80,5 +80,4 @@ public final class ExampleEconomy extends Economy {
     public List<String> getBanks() {
         return null;
     }
-
 }

@@ -22,7 +22,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onPlayerJoin(PlayerJoinEvent e)
     {
         if(!Player.isPlayerExist(RRPGCore.database.connection(), new Player(e.getPlayer().getUniqueId().toString())))
@@ -33,7 +33,7 @@ public class EventListener implements Listener {
             player.setLast_joined(new Date());
             Player.updatePlayer(RRPGCore.database.connection(), player);
         };
-    }
+    }*/
 
 
 

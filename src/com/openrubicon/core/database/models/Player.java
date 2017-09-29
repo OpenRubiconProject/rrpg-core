@@ -1,13 +1,13 @@
 package com.openrubicon.core.database.models;
 
 import com.openrubicon.core.database.Connection;
+import com.openrubicon.core.database.DatabaseModel;
 import com.openrubicon.core.database.interfaces.DatabaseMigration;
-import com.openrubicon.core.database.interfaces.DatabaseModel;
 import com.openrubicon.core.database.migrations.CreatePlayers;
 
 import java.util.*;
 
-public class Player implements DatabaseModel {
+public class Player extends DatabaseModel {
 
     private long id;
     private String uuid;
@@ -29,11 +29,17 @@ public class Player implements DatabaseModel {
     public Player() {
     }
 
-    public Player(String uuid) {
+    public Player(Connection connection) {
+        super(connection);
+    }
+
+    public Player(Connection connection, String uuid) {
+        super(connection);
         this.uuid = uuid;
     }
 
-    public Player(String uuid, String username, String display_name) {
+    public Player(Connection connection, String uuid, String username, String display_name) {
+        super(connection);
         this.uuid = uuid;
         this.username = username;
         this.display_name = display_name;

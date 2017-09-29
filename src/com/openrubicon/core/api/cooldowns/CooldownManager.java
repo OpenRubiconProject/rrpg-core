@@ -189,7 +189,7 @@ public class CooldownManager {
 
     public static void start(LivingEntity entity, Cooldown cooldown, Inventory.SlotType slot, int cdr)
     {
-        EntityInventory inventory = new EntityInventory(entity);
+        LivingEntityInventory inventory = new LivingEntityInventory(entity);
 
         for(FullItem item : inventory.getArmorWithSocket(new CooldownReduction()))
         {
@@ -218,7 +218,7 @@ public class CooldownManager {
 
     /*public static void start(LivingEntity entity, Cooldown cooldown, Inventory.SlotType slot)
     {
-        EntityInventory inventory = new EntityInventory(entity);
+        LivingEntityInventory inventory = new LivingEntityInventory(entity);
 
         FullItem item = new FullItem(inventory.getSlot(slot));
 
