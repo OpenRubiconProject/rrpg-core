@@ -94,6 +94,7 @@ abstract public class QueryBuilder<T> {
     {
         this.addWhere();
         this.wheres += "deleted_at is null ";
+        return (T)this;
     }
 
     private void addWhere()
