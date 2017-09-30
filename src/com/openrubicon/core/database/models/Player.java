@@ -7,7 +7,7 @@ import com.openrubicon.core.database.migrations.CreatePlayers;
 
 import java.util.*;
 
-public class Player extends DatabaseModel {
+public class Player extends DatabaseModel<Player> {
 
     private long id;
     private String uuid = "";

@@ -35,7 +35,7 @@ public class Database {
         connection = new Connection(new Sql2o("jdbc:mysql://" + host + ":" + port + "/" + name, username, password));
     }
 
-    public Connection connection()
+    public static Connection connection()
     {
         return connection;
     }

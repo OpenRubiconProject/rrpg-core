@@ -1,74 +1,89 @@
 package com.openrubicon.core.api.database;
 
-abstract public class QueryBuilder {
+abstract public class QueryBuilder<T> {
 
     private String query;
 
     abstract protected String getTableName();
 
-    public QueryBuilder sql(String sql)
+    public T sql(String sql)
     {
         this.query += sql;
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder select(String select)
+    public T select(String select)
     {
         this.query = "SELECT " + select + " FROM `" + this.getTableName() + "` ";
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder selectAll()
+    public T selectAll()
     {
         this.query = "SELECT * FROM `" + this.getTableName() + "` ";
-        return this;
+        return (T)(this);
     }
-    public QueryBuilder update()
+
+    public T count(String field)
+    {
+        this.query = "SELECT count(" + field + ") FROM `" + this.getTableName() + "` ";
+        return (T)(this);
+    }
+
+    public T update()
     {
         this.query = "UPDATE `" + this.getTableName() + "` ";
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder insert()
+    public T insert()
     {
         this.query = "INSERT INTO `" + this.getTableName() + "` ";
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder fields(String fields)
+    public T insert(String fields, String values)
+    {
+        this.query = "INSERT INTO `" + this.getTableName() + "` ";
+        this.fields(fields);
+        this.values(values);
+        return (T)(this);
+    }
+
+    public T fields(String fields)
     {
         this.query += "(" + fields + ") ";
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder values(String values)
+    public T values(String values)
     {
         this.query += "VALUES (" + values + ") ";
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder delete()
+    public T delete()
     {
         this.query = "DELETE FROM `" + this.getTableName() + "` ";
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder set(String fieldName, String value)
+    public T set(String fieldName, String value)
     {
         this.query += "SET `" + fieldName + "`=" + value + " ";
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder andSet(String fieldName, String value)
+    public T andSet(String fieldName, String value)
     {
         this.query += ", `" + fieldName + "`=" + value + " ";
-        return this;
+        return (T)(this);
     }
 
-    public QueryBuilder where(String sql)
+    public T where(String sql)
     {
         this.query += "WHERE " + sql + " ";
-        return this;
+        return (T)(this);
     }
 
     public String getSql()
