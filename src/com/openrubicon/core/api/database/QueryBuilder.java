@@ -7,6 +7,8 @@ abstract public class QueryBuilder<T> {
     private String wheres = "";
     private String sqls = "";
 
+    private boolean isSet = false;
+
     abstract protected String getTableName();
 
     public T sql(String sql)
@@ -36,6 +38,14 @@ abstract public class QueryBuilder<T> {
     public T update()
     {
         this.query = "UPDATE `" + this.getTableName() + "` ";
+        this.wheres = "WHERE `id`=:id ";
+        return (T)(this);
+    }
+
+    public T update(String index, String indexValue)
+    {
+        this.query = "UPDATE `" + this.getTableName() + "` ";
+        this.wheres = "WHERE `" + index + "`=" + indexValue + " ";
         return (T)(this);
     }
 
@@ -68,41 +78,102 @@ abstract public class QueryBuilder<T> {
     public T delete()
     {
         this.query = "DELETE FROM `" + this.getTableName() + "` ";
+        this.wheres = "WHERE `id`=:id ";
+        return (T)(this);
+    }
+
+    public T delete(String index, String indexValue)
+    {
+        this.query = "DELETE FROM `" + this.getTableName() + "` ";
+        this.wheres = "WHERE `" + index + "`=" + indexValue + " ";
+        return (T)(this);
+    }
+
+    public T touch()
+    {
+        this.set("updated_at", ":updated_at");
+        return (T)(this);
+    }
+
+    public T softDelete()
+    {
+        this.set("deleted_at", ":deleted_at");
+        return (T)(this);
+    }
+
+    public T set(String fieldName)
+    {
+        if(!this.isSet)
+            this.query += "SET `" + fieldName + "`=:" + fieldName + " ";
+        else
+            this.query += ", `" + fieldName + "`=:" + fieldName + " ";
+        this.isSet = true;
         return (T)(this);
     }
 
     public T set(String fieldName, String value)
     {
-        this.query += "SET `" + fieldName + "`=" + value + " ";
+        if(!this.isSet)
+            this.query += "SET `" + fieldName + "`=" + value + " ";
+        else
+            this.query += ", `" + fieldName + "`=" + value + " ";
+        this.isSet = true;
         return (T)(this);
     }
 
     public T andSet(String fieldName, String value)
     {
-        this.query += ", `" + fieldName + "`=" + value + " ";
+        this.set(fieldName, value);
         return (T)(this);
     }
 
     public T where(String sql)
     {
-        this.addWhere();
-        this.wheres += sql + " ";
+        if(this.addWhere())
+            this.wheres += sql + " ";
+        else
+            this.wheres += "AND " + sql + " ";
+
+        return (T)(this);
+    }
+
+    public T where(String field, String value)
+    {
+        if(this.addWhere())
+            this.wheres += field + "=" + value + " ";
+        else
+            this.wheres += "AND " + field + "=" + value + " ";
+
+        return (T)(this);
+    }
+
+    public T where(String field, String operator, String value)
+    {
+        if(this.addWhere())
+            this.wheres += field + operator + value + " ";
+        else
+            this.wheres += "AND " + field + operator + value + " ";
+
         return (T)(this);
     }
 
     public T whereNotDeleted()
     {
-        this.addWhere();
-        this.wheres += "deleted_at is null ";
+        if(this.addWhere())
+            this.wheres += "deleted_at is null ";
+        else
+            this.wheres += "AND deleted_at is null ";
         return (T)this;
     }
 
-    private void addWhere()
+    private boolean addWhere()
     {
         if(this.wheres.equals(""))
         {
             this.wheres += "WHERE ";
+            return true;
         }
+        return false;
     }
 
     public String getSql()

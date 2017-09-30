@@ -40,6 +40,11 @@ abstract public class DatabaseModel<T> extends QueryBuilder<T> implements com.op
         return connection.get().createQuery(this.getSql()).bind(this).executeAndFetch(modelType);
     }
 
+    public <T extends DatabaseModel> T executeFetchFirst(Connection connection, Class<T> modelType)
+    {
+        return connection.get().createQuery(this.getSql()).bind(this).executeAndFetch(modelType).get(0);
+    }
+
     public int executeCount(Connection connection)
     {
         return connection.get().createQuery(this.getSql()).bind(this).executeScalar(Integer.class);
