@@ -3,32 +3,32 @@ package com.openrubicon.core.api.command;
 import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.interactables.Console;
 import com.openrubicon.core.api.interactables.Interactable;
-import com.openrubicon.core.api.interactables.enums.InteractableType;
 import org.bukkit.command.*;
-
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 
-public class CommandExecuter implements CommandExecutor {
+public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
     private String command = "rrpg";
 
-    public CommandExecuter(JavaPlugin plugin) {
+    public CommandExecutor(JavaPlugin plugin) {
         plugin.getCommand(command).setExecutor(this);
     }
 
     public final boolean onCommand(Interactable sender, String command)
     {
         String[] parts = command.split(" ");
-
-        if(!parts[0].equals(command))
+        if(!parts[0].equals(this.command))
             return false;
 
-        String[] arguments = Arrays.copyOfRange(parts, 2, parts.length);
+        String[] arguments = {};
 
-        return this.onCommand(sender, parts[1], arguments);
+        if(parts.length > 1)
+            arguments = Arrays.copyOfRange(parts, 1, parts.length);
+
+        return this.onCommand(sender, parts[0], arguments);
     }
 
     public final boolean onCommand(Interactable sender, String command, String[] args)

@@ -1,20 +1,20 @@
-package com.openrubicon.core.api.database.models;
+package com.openrubicon.core.database.models;
 
 import com.openrubicon.core.api.database.Connection;
 import com.openrubicon.core.api.database.DatabaseModel;
 import com.openrubicon.core.api.database.interfaces.DatabaseMigration;
-import com.openrubicon.core.api.database.migrations.CreatePlayers;
+import com.openrubicon.core.database.migrations.CreatePlayers;
 
 import java.util.*;
 
 public class Player extends DatabaseModel {
 
     private long id;
-    private String uuid;
-    private String username;
-    private String display_name;
-    private String email;
-    private String password;
+    private String uuid = "";
+    private String username = "";
+    private String display_name = "";
+    private String email = "";
+    private String password = "";
     private long discord_id;
     private int verified;
     private String token;
@@ -149,34 +149,34 @@ public class Player extends DatabaseModel {
         this.deleted_at = deleted_at;
     }
 
-    public static List<Player> getPlayers(Connection connection)
+    public List<Player> getAll()
     {
-        return connection.get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null").executeAndFetch(Player.class);
+        return this.getConnection().get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null").executeAndFetch(Player.class);
     }
 
-    public static void insertPlayer(Connection connection, Player player)
+    public void insertPlayer()
     {
-        String sql = "INSERT INTO rubicon_players (uuid, username, display_name) VALUES (:uuid, :username, :display_name)";
+        String sql = "INSERT INTO rubicon_players (uuid, username, email, password display_name) VALUES (:uuid, :username, :email, :password, :display_name)";
 
-        connection.get().createQuery(sql, true).bind(player).executeUpdate().getKey();
+        this.getConnection().get().createQuery(sql, true).bind(this).executeUpdate().getKey();
     }
 
-    public static Player getPlayer(Connection connection, Player player)
+    public Player getPlayer()
     {
-        List<Player> p = connection.get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(player).executeAndFetch(Player.class);
+        List<Player> p = this.getConnection().get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(this).executeAndFetch(Player.class);
         return p.get(0);
     }
 
-    public static boolean isPlayerExist(Connection connection, Player player)
+    public boolean exists()
     {
-        return connection.get().createQuery("SELECT count(id) FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(player).executeScalar(Integer.class) >= 1;
+        return this.getConnection().get().createQuery("SELECT count(id) FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(this).executeScalar(Integer.class) >= 1;
     }
 
-    public static void updatePlayer(Connection connection, Player player)
+    public void updatePlayer()
     {
         String sql = "UPDATE rubicon_players SET display_name = :display_name, username = :username, last_joined = :last_joined, token = :token, discord_id = :discord_id, verified = :verified WHERE id = :id";
 
-        connection.get().createQuery(sql).bind(player).executeUpdate();
+        this.getConnection().get().createQuery(sql).bind(this).executeUpdate();
     }
 
     @Override

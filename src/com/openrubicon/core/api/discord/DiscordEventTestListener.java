@@ -1,13 +1,25 @@
 package com.openrubicon.core.api.discord;
 
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.bukkit.Bukkit;
 
 import java.util.HashSet;
 
 public class DiscordEventTestListener extends ListenerAdapter {
 
     public static HashSet<MessageChannel> channels = new HashSet<>();
+
+    @Override
+    public void onPrivateMessageReceived(PrivateMessageReceivedEvent e)
+    {
+        if (e.getAuthor().isBot())
+            return;
+
+        e.getAuthor().openPrivateChannel().complete().sendMessage("DID I DO IT").queue();
+        Bukkit.getLogger().info(e.getChannel().getId());
+    }
 
     /*@Override
     public void onMessageReceived(MessageReceivedEvent event)

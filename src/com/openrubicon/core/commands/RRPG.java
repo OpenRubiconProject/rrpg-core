@@ -18,6 +18,7 @@ public class RRPG extends Command {
         ArrayList<InteractableType> senders = new ArrayList<>();
         senders.add(InteractableType.CONSOLE);
         senders.add(InteractableType.PLAYER);
+        senders.add(InteractableType.DISCORD);
         return senders;
     }
 

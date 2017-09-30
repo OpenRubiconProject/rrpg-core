@@ -18,6 +18,7 @@ public class DiscordRestart extends Command {
     public ArrayList<InteractableType> getAllowedSenderTypes() {
         ArrayList<InteractableType> senders = new ArrayList<>();
         senders.add(InteractableType.CONSOLE);
+        senders.add(InteractableType.DISCORD);
         return senders;
     }
 

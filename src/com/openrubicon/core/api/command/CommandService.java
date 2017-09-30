@@ -1,7 +1,6 @@
 package com.openrubicon.core.api.command;
 
 import com.openrubicon.core.api.services.interfaces.Service;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class CommandService implements Service {
 
     public CommandService(JavaPlugin plugin, ArrayList<Command> commands) {
         this.commands = commands;
-        this.commandExecutor = new CommandExecuter(plugin);
+        this.commandExecutor = new CommandExecutor(plugin);
     }
 
     public CommandExecutor getCommandExecutor() {

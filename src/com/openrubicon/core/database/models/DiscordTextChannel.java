@@ -1,9 +1,9 @@
-package com.openrubicon.core.api.database.models;
+package com.openrubicon.core.database.models;
 
 import com.openrubicon.core.api.database.Connection;
 import com.openrubicon.core.api.database.DatabaseModel;
 import com.openrubicon.core.api.database.interfaces.DatabaseMigration;
-import com.openrubicon.core.api.database.migrations.CreateDiscordTextChannels;
+import com.openrubicon.core.database.migrations.CreateDiscordTextChannels;
 
 import java.util.*;
 

@@ -4,19 +4,15 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.command.CommandService;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
-import com.openrubicon.core.api.interactables.Console;
 import com.openrubicon.core.api.reflection.Reflection;
-import com.openrubicon.core.commands.ConfigGet;
-import com.openrubicon.core.commands.ConnectorRestart;
-import com.openrubicon.core.commands.DiscordRestart;
-import com.openrubicon.core.commands.RRPG;
+import com.openrubicon.core.commands.*;
 import com.openrubicon.core.configuration.Configuration;
 import com.openrubicon.core.api.connector.ConnectorServer;
 import com.openrubicon.core.api.database.Database;
 import com.openrubicon.core.api.database.DatabaseMigrator;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
-import com.openrubicon.core.api.database.models.DiscordTextChannel;
-import com.openrubicon.core.api.database.models.Player;
+import com.openrubicon.core.database.models.DiscordTextChannel;
+import com.openrubicon.core.database.models.Player;
 import com.openrubicon.core.events.EventListener;
 import com.openrubicon.core.events.FiveTickEvent;
 import com.openrubicon.core.helpers.Helpers;
@@ -48,7 +44,7 @@ import java.util.ArrayList;
  *      - Make configuration modular (Other modules should see main config)
  *      - Make a decision on porting over durability, elements, rarity, modification (Anvil)
  *      - Build authentication API
- *      - Port over the combat API
+ *      - v Port over the combat API
  *      - Potentially port over some events other events: PlayerLandOnGround, PlayerLookingAtEntity etc.
  *      - Create an API bridge for Vault perms and chat
  *      - Make Connector do something (RESTful API which interacts real time with server)
@@ -56,11 +52,11 @@ import java.util.ArrayList;
  *      - Add commands for altering configuration values and debug. Also for rebooting the Discord, Database, and Connector configurations.
  *      - Finish Database Query Builder
  *      - Finish HorseInventory
- *      - Move Enums to better directories
+ *      - v Move Enums to better directories
  *      - Create additional extension classes like ExampleEconomy
  *      - Document each class and build a JavaDoc
  *      - Add system for tracking user display name changes, last played time, and total time played
- *      - Add optional register server with Rubicon system. This will provide a unique server ID and token
+ *      - Add optional register minecraft server with centralized Rubicon system. This will provide a unique server ID and token
  *      - Add system for pirate protection
  *      - Build server API which Discord, Connector, Modules, and Web can hook into. Shows stats like current/max players, whos online, etc.
  *      - Build management API which Discord, Connector, Modules, and Web can hook into
@@ -102,6 +98,7 @@ public class RRPGCore extends JavaPlugin implements Module {
         commands.add(new ConnectorRestart());
         commands.add(new ConfigGet());
         commands.add(new RRPG());
+        commands.add(new Register());
         return commands;
     }
 

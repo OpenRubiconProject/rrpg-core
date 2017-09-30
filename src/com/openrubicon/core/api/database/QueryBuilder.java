@@ -67,7 +67,7 @@ abstract public class QueryBuilder {
 
     public QueryBuilder where(String sql)
     {
-        this.query += sql + " ";
+        this.query += "WHERE " + sql + " ";
         return this;
     }
 

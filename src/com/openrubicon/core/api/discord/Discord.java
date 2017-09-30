@@ -29,7 +29,8 @@ public class Discord implements Errorable, Startable {
     public void start()
     {
         try {
-            Discord.api = new JDABuilder(AccountType.BOT).setToken(Discord.token).addEventListener(new DiscordEventTestListener()).buildAsync();
+            //Discord.api = new JDABuilder(AccountType.BOT).setToken(Discord.token).addEventListener(new DiscordEventTestListener()).buildAsync();
+            Discord.api = new JDABuilder(AccountType.BOT).setToken(Discord.token).addEventListener(new DiscordEventListener()).buildAsync();
             errored = false;
         } catch (LoginException e) {
             e.printStackTrace();

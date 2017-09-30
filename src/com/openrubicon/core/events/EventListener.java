@@ -13,7 +13,8 @@ public class EventListener implements Listener {
     {
         for(MessageChannel channel : DiscordEventTestListener.channels)
         {
-            channel.sendMessage("["+e.getPlayer().getName()+"] " + e.getMessage()).queue();
+            if(channel != null)
+                channel.sendMessage("["+e.getPlayer().getName()+"] " + e.getMessage()).queue();
         }
     }
 

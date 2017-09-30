@@ -1,4 +1,4 @@
-package com.openrubicon.core.api.database.migrations;
+package com.openrubicon.core.database.migrations;
 
 import com.openrubicon.core.api.database.Connection;
 import com.openrubicon.core.api.database.interfaces.DatabaseMigration;
