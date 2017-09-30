@@ -18,4 +18,6 @@ public class AccountManagement {
         return true;
     }
 
+    public boolean linkDiscord()
+
 }

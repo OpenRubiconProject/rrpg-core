@@ -1,7 +1,6 @@
 package com.openrubicon.core.api.database;
 
 import com.openrubicon.core.api.database.interfaces.DatabaseConnection;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 
@@ -25,16 +24,6 @@ abstract public class DatabaseModel<T> extends QueryBuilder<T> implements com.op
 
     public DatabaseModel() {
     }
-
-    /*public int createModel(String fields, String binds)
-    {
-        return this.connection.get().createQuery(this.insert().fields(fields).values(binds).getSql(), true).bind(this).executeUpdate().getKey(Integer.class);
-    }
-
-    public int countModel(String field, String where)
-    {
-        return this.connection.get().createQuery(this.count(field).getSql()).bind(this).executeScalar(Integer.class);
-}*/
 
     public int executeInsert(Connection connection)
     {

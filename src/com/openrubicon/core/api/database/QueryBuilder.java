@@ -4,11 +4,14 @@ abstract public class QueryBuilder<T> {
 
     private String query;
 
+    private String wheres = "";
+    private String sqls = "";
+
     abstract protected String getTableName();
 
     public T sql(String sql)
     {
-        this.query += sql;
+        this.sqls += sql;
         return (T)(this);
     }
 
@@ -82,13 +85,28 @@ abstract public class QueryBuilder<T> {
 
     public T where(String sql)
     {
-        this.query += "WHERE " + sql + " ";
+        this.addWhere();
+        this.wheres += sql + " ";
         return (T)(this);
+    }
+
+    public T whereNotDeleted()
+    {
+        this.addWhere();
+        this.wheres += "deleted_at is null ";
+    }
+
+    private void addWhere()
+    {
+        if(this.wheres.equals(""))
+        {
+            this.wheres += "WHERE ";
+        }
     }
 
     public String getSql()
     {
-        return this.query;
+        return this.query + this.wheres + this.sqls;
     }
 
 }
