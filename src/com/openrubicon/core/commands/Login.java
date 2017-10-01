@@ -7,27 +7,26 @@ import com.openrubicon.core.api.interactables.enums.InteractableType;
 
 import java.util.ArrayList;
 
-public class Register extends Command {
-
+public class Login extends Command {
     @Override
     public String getCommandFormat() {
-        return "register $ $";
+        return "login $ $";
     }
 
     @Override
     public ArrayList<InteractableType> getAllowedSenderTypes() {
         ArrayList<InteractableType> senders = new ArrayList<>();
-        senders.add(InteractableType.DISCORD);
         senders.add(InteractableType.PLAYER);
+        senders.add(InteractableType.DISCORD);
         return senders;
     }
 
     @Override
     public void handle(Interactable sender, String[] args) {
         AccountManagement accountManagement = new AccountManagement();
-        if(accountManagement.register(args[0], args[1]))
-            sender.sendMessage("Registered successfully");
+        if(accountManagement.login(args[0], args[1]))
+            sender.sendMessage("Logged in successfully");
         else
-            sender.sendMessage("Registered failed");
+            sender.sendMessage("Login failed");
     }
 }

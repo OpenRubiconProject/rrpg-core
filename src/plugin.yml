@@ -18,3 +18,7 @@ commands:
       rrpg config get <Key>:
                description: Retrieves the value of a configuration key
                usage: /rrpg config get <Config Key>
+      rrpg test command:
+               description: Tests a command
+               usage: /rrpg test command
+

@@ -1,8 +1,10 @@
 package com.openrubicon.core.api.database;
 
+import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
+
 import java.util.ArrayList;
 
-public class DatabaseMigrator {
+public class DatabaseMigrator implements PostDatabaseLoad {
 
     private ArrayList<com.openrubicon.core.api.database.interfaces.DatabaseModel> models;
 
@@ -16,6 +18,11 @@ public class DatabaseMigrator {
 
     public void setModels(ArrayList<com.openrubicon.core.api.database.interfaces.DatabaseModel> models) {
         this.models = models;
+    }
+
+    @Override
+    public void run() {
+        this.up(Database.connection());
     }
 
     public int up(Connection connection)

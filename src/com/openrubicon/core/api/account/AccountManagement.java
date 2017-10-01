@@ -12,10 +12,13 @@ public class AccountManagement {
         player.setEmail(email);
         player.setPassword(password);
 
-        if(player.count("id").where("deleted_at is null AND email = :email").executeCount() > 0)
+        player.setCreated_at(new Date());
+        player.setUpdated_at(new Date());
+
+        if(player.count("id").where("email", ":email").whereNotDeleted().executeCount() > 0)
             return false;
 
-        player.insert("email,password", ":email, :password").executeInsert();
+        player.insert("email,password,created_at,updated_at", ":email, :password, :created_at, :updated_at").executeInsert();
 
         return true;
     }
@@ -26,13 +29,13 @@ public class AccountManagement {
         player.setEmail(email);
         player.setPassword(password);
 
-        if(player.count("id").where("email = :email AND password = :password").executeCount() != 1)
+        if(player.count("id").where("email", ":email").where("password", ":password").executeCount() != 1)
             return false;
 
-        player = player.selectAll().where("email = :email").where("password = :password").whereNotDeleted().whereNotDeleted().executeFetch(Player.class).get(0);
+        player = player.selectAll().where("email = :email").where("password = :password").executeFetchFirst(Player.class);
         player.setDiscord_id(discordId);
         player.setUpdated_at(new Date());
-        player.update().set("discord_id", ":discord_id").andSet("updated_at", ":updated_at").where("id", ":id").whereNotDeleted().executeUpdate();
+        player.update().set("discord_id", ":discord_id").touch().executeUpdate();
 
         return true;
     }
@@ -43,13 +46,13 @@ public class AccountManagement {
         player.setEmail(email);
         player.setPassword(password);
 
-        if(player.count("id").where("email = :email AND password = :password").whereNotDeleted().executeCount() != 1)
+        if(player.count("id").where("email = :email").where("password = :password").executeCount() != 1)
             return false;
 
-        player = player.selectAll().where("email = :email").where("password = :password").whereNotDeleted().executeFetch(Player.class).get(0);
+        player = player.selectAll().where("email = :email").where("password = :password").executeFetchFirst(Player.class);
         player.setUuid(uuid);
         player.setUpdated_at(new Date());
-        player.update().set("uuid", ":uuid").andSet("updated_at", ":updated_at").where("id", ":id").whereNotDeleted().executeUpdate();
+        player.update().set("uuid", ":uuid").touch().executeUpdate();
 
         return true;
     }
@@ -60,8 +63,12 @@ public class AccountManagement {
         player.setEmail(email);
         player.setPassword(password);
 
-        if(player.count("id").where("email = :email AND password = :password").whereNotDeleted().executeCount() != 1)
+        if(player.count("id").where("email = :email").where("password = :password").executeCount() != 1)
             return false;
+
+        player = player.selectAll().where("email = :email").where("password = :password").executeFetchFirst(Player.class);
+        player.setUpdated_at(new Date());
+        player.update().touch().executeUpdate();
 
         return true;
     }

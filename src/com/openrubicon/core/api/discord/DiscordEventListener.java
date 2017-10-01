@@ -18,7 +18,8 @@ public class DiscordEventListener extends ListenerAdapter {
 
         if(e.getMessage().getContent().substring(0,1).equals("!"))
         {
-            RRPGCore.services.getSerivce(CommandService.class).getCommandExecutor().onCommand(new Discord(e.getChannel()), e.getMessage().getContent().substring(1));
+
+            RRPGCore.services.getSerivce(CommandService.class).getCommandExecutor().onCommand(new Discord(e.getChannel(), e.getAuthor()), e.getMessage().getContent().substring(1));
         } else {
         }
     }

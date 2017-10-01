@@ -1,5 +1,7 @@
 package com.openrubicon.core.api.database;
 
+import java.util.Date;
+
 abstract public class QueryBuilder<T> {
 
     private String query;
@@ -11,6 +13,13 @@ abstract public class QueryBuilder<T> {
 
     abstract protected String getTableName();
 
+    private void reset()
+    {
+        this.query = "";
+        this.wheres = "";
+        this.sqls = "";
+    }
+
     public T sql(String sql)
     {
         this.sqls += sql;
@@ -19,44 +28,56 @@ abstract public class QueryBuilder<T> {
 
     public T select(String select)
     {
+        this.reset();
         this.query = "SELECT " + select + " FROM `" + this.getTableName() + "` ";
+        this.whereNotDeleted();
         return (T)(this);
     }
 
     public T selectAll()
     {
+        this.reset();
         this.query = "SELECT * FROM `" + this.getTableName() + "` ";
+        this.whereNotDeleted();
         return (T)(this);
     }
 
     public T count(String field)
     {
+        this.reset();
         this.query = "SELECT count(" + field + ") FROM `" + this.getTableName() + "` ";
+        this.whereNotDeleted();
         return (T)(this);
     }
 
     public T update()
     {
+        this.reset();
         this.query = "UPDATE `" + this.getTableName() + "` ";
         this.wheres = "WHERE `id`=:id ";
+        this.whereNotDeleted();
         return (T)(this);
     }
 
     public T update(String index, String indexValue)
     {
+        this.reset();
         this.query = "UPDATE `" + this.getTableName() + "` ";
         this.wheres = "WHERE `" + index + "`=" + indexValue + " ";
+        this.whereNotDeleted();
         return (T)(this);
     }
 
     public T insert()
     {
+        this.reset();
         this.query = "INSERT INTO `" + this.getTableName() + "` ";
         return (T)(this);
     }
 
     public T insert(String fields, String values)
     {
+        this.reset();
         this.query = "INSERT INTO `" + this.getTableName() + "` ";
         this.fields(fields);
         this.values(values);
@@ -77,6 +98,7 @@ abstract public class QueryBuilder<T> {
 
     public T delete()
     {
+        this.reset();
         this.query = "DELETE FROM `" + this.getTableName() + "` ";
         this.wheres = "WHERE `id`=:id ";
         return (T)(this);
@@ -84,6 +106,7 @@ abstract public class QueryBuilder<T> {
 
     public T delete(String index, String indexValue)
     {
+        this.reset();
         this.query = "DELETE FROM `" + this.getTableName() + "` ";
         this.wheres = "WHERE `" + index + "`=" + indexValue + " ";
         return (T)(this);
@@ -170,7 +193,7 @@ abstract public class QueryBuilder<T> {
     {
         if(this.wheres.equals(""))
         {
-            this.wheres += "WHERE ";
+            this.wheres = "WHERE ";
             return true;
         }
         return false;

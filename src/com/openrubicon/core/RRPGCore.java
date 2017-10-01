@@ -2,6 +2,7 @@ package com.openrubicon.core;
 
 import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.command.CommandService;
+import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
 import com.openrubicon.core.api.reflection.Reflection;
@@ -61,6 +62,7 @@ import java.util.ArrayList;
  *      - Build server API which Discord, Connector, Modules, and Web can hook into. Shows stats like current/max players, whos online, etc.
  *      - Build management API which Discord, Connector, Modules, and Web can hook into
  *      - Create event hooks for triggering the custom events
+ *      - Database Migrations versioning table
  *
  *
  */
@@ -99,7 +101,17 @@ public class RRPGCore extends JavaPlugin implements Module {
         commands.add(new ConfigGet());
         commands.add(new RRPG());
         commands.add(new Register());
+        commands.add(new Login());
+        commands.add(new Link());
+        commands.add(new TestCommand());
         return commands;
+    }
+
+    @Override
+    public ArrayList<PostDatabaseLoad> getPostDatabaseLoads() {
+        ArrayList<PostDatabaseLoad> loads = new ArrayList<>();
+        loads.add(new DatabaseMigrator(RRPGCore.modules.getDatabaseModels()));
+        return loads;
     }
 
     @Override
@@ -274,9 +286,14 @@ public class RRPGCore extends JavaPlugin implements Module {
 
                 RRPGCore.database.setLoaded(true);
 
-                getLogger().info("Running Database Migrations if Any Exist..");
-                int count = new DatabaseMigrator(RRPGCore.modules.getDatabaseModels()).up(RRPGCore.database.connection());
-                getLogger().info("Completed migrating " + count + " database migrations.");
+                for(PostDatabaseLoad load : RRPGCore.modules.getPostDatabaseLoads())
+                {
+                    load.run();
+                }
+
+                //getLogger().info("Running Database Migrations if Any Exist..");
+                //int count = new DatabaseMigrator(RRPGCore.modules.getDatabaseModels()).up(RRPGCore.database.connection());
+                //getLogger().info("Completed migrating " + count + " database migrations.");
 
                 for(DiscordTextChannel channel : DiscordTextChannel.getChannels(RRPGCore.database.connection()))
                 {

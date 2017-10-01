@@ -1,12 +1,9 @@
 package com.openrubicon.core.api.combat.events;
 
+import com.openrubicon.core.api.events.Event;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 abstract public class PlayerCombatEvent extends Event {
-
-    private static final HandlerList handlers = new HandlerList();
 
     private Player player;
 
@@ -18,8 +15,4 @@ abstract public class PlayerCombatEvent extends Event {
         return player;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
 }
