@@ -1,5 +1,6 @@
 package com.openrubicon.core.api.interactables;
 
+import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -20,5 +21,10 @@ public class Console implements Interactable {
     @Override
     public InteractableType getInteractableType() {
         return InteractableType.CONSOLE;
+    }
+
+    @Override
+    public InteractableSenderVisibility getInteractableSenderVisibility() {
+        return InteractableSenderVisibility.NOT_APPLICABLE;
     }
 }

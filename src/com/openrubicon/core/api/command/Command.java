@@ -1,6 +1,7 @@
 package com.openrubicon.core.api.command;
 
 import com.openrubicon.core.api.interactables.Interactable;
+import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import org.bukkit.Bukkit;
 
@@ -32,6 +33,11 @@ abstract public class Command {
     abstract public ArrayList<InteractableType> getAllowedSenderTypes();
     abstract public void handle(Interactable sender, String[] args);
 
+    public ArrayList<InteractableSenderVisibility> getAllowedSenderVisiblity()
+    {
+        return new ArrayList<>();
+    }
+
     /**
      * Takes string in the form of:
      *      money pay $ $
@@ -60,18 +66,6 @@ abstract public class Command {
         if(!command.equals(this.command))
             return false;
 
-        if(args.length != this.argsCount)
-        {
-            //sender.sendMessage("Incompatible arguments. Please check the syntax of this command and try again.");
-            return false;
-        }
-
-        if(!this.getAllowedSenderTypes().contains(sender.getInteractableType()))
-        {
-            //commandSender.sendMessage("This sender type cannot send this command.");
-            return false;
-        }
-
         int i = 0;
         for(String arg : this.switchArgs)
         {
@@ -82,6 +76,24 @@ abstract public class Command {
             }
 
             i++;
+        }
+
+        if(args.length != this.argsCount)
+        {
+            sender.sendMessage("Incompatible arguments. Please check the syntax of this command and try again.");
+            return false;
+        }
+
+        if(!this.getAllowedSenderTypes().contains(sender.getInteractableType()))
+        {
+            sender.senderTypeError();
+            return false;
+        }
+
+        if(!this.getAllowedSenderVisiblity().isEmpty() && !this.getAllowedSenderVisiblity().contains(sender.getInteractableSenderVisibility()))
+        {
+            sender.visiblityTypeError();
+            return false;
         }
 
         if(debugCommand)

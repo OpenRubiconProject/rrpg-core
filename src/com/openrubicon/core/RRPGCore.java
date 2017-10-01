@@ -7,6 +7,9 @@ import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
 import com.openrubicon.core.api.reflection.Reflection;
 import com.openrubicon.core.commands.*;
+import com.openrubicon.core.commands.account.Link;
+import com.openrubicon.core.commands.account.Login;
+import com.openrubicon.core.commands.account.Register;
 import com.openrubicon.core.configuration.Configuration;
 import com.openrubicon.core.api.connector.ConnectorServer;
 import com.openrubicon.core.api.database.Database;
@@ -44,9 +47,9 @@ import java.util.ArrayList;
  *      - Discord Integration (Authentication, communication each way, commands)
  *      - Make configuration modular (Other modules should see main config)
  *      - Make a decision on porting over durability, elements, rarity, modification (Anvil)
- *      - Build authentication API
+ *      - v Build authentication API
  *      - v Port over the combat API
- *      - Potentially port over some events other events: PlayerLandOnGround, PlayerLookingAtEntity etc.
+ *      - v Potentially port over some events other events: PlayerLandOnGround, PlayerLookingAtEntity etc.
  *      - Create an API bridge for Vault perms and chat
  *      - Make Connector do something (RESTful API which interacts real time with server)
  *      - Make a stat tracking API

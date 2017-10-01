@@ -1,5 +1,6 @@
 package com.openrubicon.core.api.interactables;
 
+import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 
 public class Player implements Interactable {
@@ -22,5 +23,10 @@ public class Player implements Interactable {
 
     public org.bukkit.entity.Player getPlayer() {
         return player;
+    }
+
+    @Override
+    public InteractableSenderVisibility getInteractableSenderVisibility() {
+        return InteractableSenderVisibility.NOT_APPLICABLE;
     }
 }
