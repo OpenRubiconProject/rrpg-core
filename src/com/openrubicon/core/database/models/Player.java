@@ -23,7 +23,7 @@ public class Player extends DatabaseModel<Player> {
     private Date updated_at;
     private Date deleted_at;
 
-    private String tableName = "rubicon_players";
+    private String tableName = "rubicon_core_players";
     private int version = 1;
 
     public Player() {

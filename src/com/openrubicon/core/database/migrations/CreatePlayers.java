@@ -7,7 +7,7 @@ public class CreatePlayers implements DatabaseMigration {
 
     @Override
     public boolean up(Connection connection) {
-        connection.createTable("CREATE TABLE IF NOT EXISTS `rubicon_players` (\n" +
+        connection.createTable("CREATE TABLE IF NOT EXISTS `rubicon_core_players` (\n" +
                 " `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
                 " `uuid` varchar(128) NOT NULL DEFAULT '',\n" +
                 " `username` varchar(32) NOT NULL DEFAULT '',\n" +

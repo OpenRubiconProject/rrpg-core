@@ -16,7 +16,7 @@ public class DiscordTextChannel extends DatabaseModel {
     private Date updated_at;
     private Date deleted_at;
 
-    private String tableName = "rubicon_discord_text_channels";
+    private String tableName = "rubicon_core_discord_text_channels";
     private int version = 1;
 
     public DiscordTextChannel() {
@@ -80,7 +80,7 @@ public class DiscordTextChannel extends DatabaseModel {
 
     public static List<DiscordTextChannel> getChannels(Connection connection)
     {
-           return connection.get().createQuery("SELECT channel_id FROM rubicon_discord_text_channels WHERE disabled=0").executeAndFetch(DiscordTextChannel.class);
+           return connection.get().createQuery("SELECT channel_id FROM rubicon_core_discord_text_channels WHERE disabled=0").executeAndFetch(DiscordTextChannel.class);
     }
 
     @Override

@@ -1,26 +1,26 @@
-package com.openrubicon.core.database.migrations;
+package com.openrubicon.core.api.database.migrations;
 
 import com.openrubicon.core.api.database.Connection;
 import com.openrubicon.core.api.database.interfaces.DatabaseMigration;
 
-public class CreateDiscordTextChannels implements DatabaseMigration {
-
+public class CreateModelVersions implements DatabaseMigration {
     @Override
     public boolean up(Connection connection) {
-        return connection.createTable("CREATE TABLE IF NOT EXISTS `rubicon_core_discord_text_channels` (\n" +
+        connection.createTable("CREATE TABLE IF NOT EXISTS `rubicon_core_model_versions` (\n" +
                 " `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
-                " `channel_id` bigint(20) NOT NULL,\n" +
-                " `disabled` tinyint(1) NOT NULL DEFAULT '0',\n" +
+                " `table_name` varchar(128) NOT NULL,\n" +
+                " `migration_version` int(11) NOT NULL,\n" +
                 " `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                 " `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                " `deleted_at` datetime DEFAULT NULL,\n" +
                 " PRIMARY KEY (`id`)\n" +
-                ") ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4");
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        return true;
     }
 
     @Override
     public boolean down(Connection connection) {
-        return connection.dropTable("rubicon_discord_text_channels_test");
+        connection.dropTable("rubicon_core_model_versions");
+        return true;
     }
 
     @Override

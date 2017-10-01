@@ -1,7 +1,5 @@
 package com.openrubicon.core.api.database;
 
-import java.util.Date;
-
 abstract public class QueryBuilder<T> {
 
     private String query;
@@ -11,7 +9,13 @@ abstract public class QueryBuilder<T> {
 
     private boolean isSet = false;
 
+    private boolean isSoftDeletes = true;
+
     abstract protected String getTableName();
+
+    public void setSoftDeletes(boolean softDeletes) {
+        isSoftDeletes = softDeletes;
+    }
 
     private void reset()
     {
@@ -30,7 +34,8 @@ abstract public class QueryBuilder<T> {
     {
         this.reset();
         this.query = "SELECT " + select + " FROM `" + this.getTableName() + "` ";
-        this.whereNotDeleted();
+        if(this.isSoftDeletes)
+            this.whereNotDeleted();
         return (T)(this);
     }
 
@@ -38,7 +43,8 @@ abstract public class QueryBuilder<T> {
     {
         this.reset();
         this.query = "SELECT * FROM `" + this.getTableName() + "` ";
-        this.whereNotDeleted();
+        if(this.isSoftDeletes)
+            this.whereNotDeleted();
         return (T)(this);
     }
 
@@ -46,7 +52,8 @@ abstract public class QueryBuilder<T> {
     {
         this.reset();
         this.query = "SELECT count(" + field + ") FROM `" + this.getTableName() + "` ";
-        this.whereNotDeleted();
+        if(this.isSoftDeletes)
+            this.whereNotDeleted();
         return (T)(this);
     }
 
@@ -55,7 +62,8 @@ abstract public class QueryBuilder<T> {
         this.reset();
         this.query = "UPDATE `" + this.getTableName() + "` ";
         this.wheres = "WHERE `id`=:id ";
-        this.whereNotDeleted();
+        if(this.isSoftDeletes)
+            this.whereNotDeleted();
         return (T)(this);
     }
 
@@ -64,7 +72,8 @@ abstract public class QueryBuilder<T> {
         this.reset();
         this.query = "UPDATE `" + this.getTableName() + "` ";
         this.wheres = "WHERE `" + index + "`=" + indexValue + " ";
-        this.whereNotDeleted();
+        if(this.isSoftDeletes)
+            this.whereNotDeleted();
         return (T)(this);
     }
 
