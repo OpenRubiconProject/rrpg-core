@@ -2,7 +2,7 @@ package com.openrubicon.core.api.vault.economy;
 
 public class EconomyResponse extends net.milkbowl.vault.economy.EconomyResponse {
 
-    private EconomyResponse(double amount, double balance, ResponseType type, String errorMessage) {
+    public EconomyResponse(double amount, double balance, ResponseType type, String errorMessage) {
         super(amount, balance, type, errorMessage);
     }
 

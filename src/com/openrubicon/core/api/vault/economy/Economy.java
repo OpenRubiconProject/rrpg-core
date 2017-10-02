@@ -9,6 +9,8 @@ abstract public class Economy extends AbstractEconomy {
 
     private Plugin plugin = null;
 
+    public Economy(){}
+
     public Economy(Plugin plugin) {
         plugin.getLogger().info("Establishing Economy " + this.getName() + "..");
 

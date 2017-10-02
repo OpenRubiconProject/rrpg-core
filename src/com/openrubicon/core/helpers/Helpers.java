@@ -98,25 +98,6 @@ public class Helpers {
         return StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(camelCase), ' ');
     }
 
-    /*public static String getPlayerName(String uuid){
-        Economy_Economics e = (Economy_Economics)Economics.vaultEconomy;
-        if (e.getHashMap().containsKey(uuid)){
-            return e.getHashMap().get(uuid).getUsername();
-        } else {
-            return "";
-        }
-    }
-
-    public static String getPlayerUuid(String name){
-        Economy_Economics e = (Economy_Economics)Economics.vaultEconomy;
-        for(PlayerAccount a : e.getHashMap().values()){
-            if(a.getUsername().equals(name)){
-                return a.getUuid();
-            }
-        }
-        return "";
-    }*/
-
     public static String[] toArray(ArrayList<String> strings)
     {
         return strings.toArray(new String[0]);
