@@ -1,6 +1,6 @@
 package com.openrubicon.core.api.command;
 
-import com.openrubicon.core.api.interactables.Interactable;
+import com.openrubicon.core.api.interactables.interfaces.Interactable;
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import org.bukkit.Bukkit;

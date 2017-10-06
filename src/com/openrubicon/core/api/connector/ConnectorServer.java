@@ -1,7 +1,7 @@
 package com.openrubicon.core.api.connector;
 
-import com.openrubicon.core.interfaces.Errorable;
-import com.openrubicon.core.interfaces.Startable;
+import com.openrubicon.core.api.interfaces.Errorable;
+import com.openrubicon.core.api.interfaces.Startable;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;

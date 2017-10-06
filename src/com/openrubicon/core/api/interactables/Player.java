@@ -2,6 +2,7 @@ package com.openrubicon.core.api.interactables;
 
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
+import com.openrubicon.core.api.interactables.interfaces.Interactable;
 
 public class Player implements Interactable {
 

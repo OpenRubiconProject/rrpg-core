@@ -3,7 +3,7 @@ package com.openrubicon.core.commands.account;
 import com.openrubicon.core.api.account.AccountManagement;
 import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.interactables.Discord;
-import com.openrubicon.core.api.interactables.Interactable;
+import com.openrubicon.core.api.interactables.interfaces.Interactable;
 import com.openrubicon.core.api.interactables.Player;
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;

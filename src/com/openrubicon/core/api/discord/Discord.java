@@ -1,7 +1,7 @@
 package com.openrubicon.core.api.discord;
 
-import com.openrubicon.core.interfaces.Errorable;
-import com.openrubicon.core.interfaces.Startable;
+import com.openrubicon.core.api.interfaces.Errorable;
+import com.openrubicon.core.api.interfaces.Startable;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;

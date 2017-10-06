@@ -65,7 +65,7 @@ import java.util.ArrayList;
  *      - Build server API which Discord, Connector, Modules, and Web can hook into. Shows stats like current/max players, whos online, etc.
  *      - Build management API which Discord, Connector, Modules, and Web can hook into
  *      - Create event hooks for triggering the custom events
- *      - Database Migrations versioning table
+ *      - v Database Migrations versioning table
  *
  *
  */

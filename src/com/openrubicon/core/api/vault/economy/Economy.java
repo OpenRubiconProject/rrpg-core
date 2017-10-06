@@ -7,10 +7,6 @@ import org.bukkit.plugin.Plugin;
 
 abstract public class Economy extends AbstractEconomy {
 
-    private Plugin plugin = null;
-
-    public Economy(){}
-
     public Economy(Plugin plugin) {
         plugin.getLogger().info("Establishing Economy " + this.getName() + "..");
 
@@ -20,7 +16,6 @@ abstract public class Economy extends AbstractEconomy {
         } else {
             Bukkit.getLogger().info("Unable to find Vault. Ensure you have the Vault API Plugin.");
         }
-        this.plugin = plugin;
     }
 
     @Override

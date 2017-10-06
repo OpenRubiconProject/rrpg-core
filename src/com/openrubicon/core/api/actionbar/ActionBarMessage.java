@@ -1,6 +1,6 @@
 package com.openrubicon.core.api.actionbar;
 
-import com.openrubicon.core.enums.Priority;
+import com.openrubicon.core.api.enums.Priority;
 import com.openrubicon.core.helpers.Helpers;
 
 public class ActionBarMessage {

@@ -1,4 +1,4 @@
-package com.openrubicon.core.api.interactables;
+package com.openrubicon.core.api.interactables.interfaces;
 
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;

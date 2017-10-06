@@ -1,9 +1,8 @@
 package com.openrubicon.core.commands;
 
 import com.openrubicon.core.api.command.Command;
-import com.openrubicon.core.api.interactables.Interactable;
+import com.openrubicon.core.api.interactables.interfaces.Interactable;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 

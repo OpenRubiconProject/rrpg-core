@@ -6,7 +6,7 @@ import com.openrubicon.core.api.nbt.List;
 import com.openrubicon.core.api.attributes.enums.AttributeModifierType;
 import com.openrubicon.core.api.inventory.enums.InventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
-import com.openrubicon.core.interfaces.Observeable;
+import com.openrubicon.core.api.interfaces.Observeable;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;

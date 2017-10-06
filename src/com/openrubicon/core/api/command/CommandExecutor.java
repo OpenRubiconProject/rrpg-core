@@ -2,7 +2,7 @@ package com.openrubicon.core.api.command;
 
 import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.interactables.Console;
-import com.openrubicon.core.api.interactables.Interactable;
+import com.openrubicon.core.api.interactables.interfaces.Interactable;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

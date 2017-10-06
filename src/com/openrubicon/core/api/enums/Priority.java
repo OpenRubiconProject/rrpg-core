@@ -1,4 +1,4 @@
-package com.openrubicon.core.enums;
+package com.openrubicon.core.api.enums;
 
 public enum Priority {
 
