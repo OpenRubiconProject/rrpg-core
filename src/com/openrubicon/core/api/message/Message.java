@@ -7,6 +7,11 @@ abstract public class Message {
     private String message;
     private Date created_at;
 
+    public Message(String message) {
+        this.message = message;
+        this.created_at = new Date();
+    }
+
     public Message(String message, Date created_at) {
         this.message = message;
         this.created_at = created_at;

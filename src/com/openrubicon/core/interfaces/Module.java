@@ -1,10 +1,12 @@
 package com.openrubicon.core.interfaces;
 
 import com.openrubicon.core.api.command.Command;
+import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public interface Module {
 
@@ -19,6 +21,10 @@ public interface Module {
     default ArrayList<PostDatabaseLoad> getPostDatabaseLoads()
     {
         return new ArrayList<>();
+    }
+    default LinkedList<ConfigurationProperty> getConfigurationProperties()
+    {
+        return new LinkedList<>();
     }
     String getKey();
     String getName();

@@ -1,7 +1,8 @@
 package com.openrubicon.core.api.cooldowns;
 
+import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.cooldowns.events.CooldownCompletedEvent;
-import com.openrubicon.core.configuration.Configuration;
+import com.openrubicon.core.configuration.CooldownReductionCap;
 import org.bukkit.Bukkit;
 
 import java.util.HashSet;
@@ -54,8 +55,8 @@ public class CooldownManager {
     public static void reset(Cooldown cooldown)
     {
         int reduction = cooldown.getCooldownReduction();
-        if(reduction > Configuration.COOLDOWN_REDUCTION_CAP)
-            reduction = Configuration.COOLDOWN_REDUCTION_CAP;
+        if(reduction > (int) RRPGCore.config.get(CooldownReductionCap.class).getProperty())
+            reduction = (int)RRPGCore.config.get(CooldownReductionCap.class).getProperty();
 
         cooldown.setCurrent((int)(cooldown.getLength() - ((float)cooldown.getLength() * ((float)reduction / 100f))));
         //Bukkit.broadcastMessage("CDR3:" + this.current);

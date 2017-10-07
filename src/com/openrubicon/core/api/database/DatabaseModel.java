@@ -1,8 +1,6 @@
 package com.openrubicon.core.api.database;
 
 import com.openrubicon.core.api.database.interfaces.DatabaseConnection;
-import org.bukkit.Bukkit;
-
 import java.util.List;
 
 abstract public class DatabaseModel<T> extends QueryBuilder<T> implements com.openrubicon.core.api.database.interfaces.DatabaseModel, DatabaseConnection {

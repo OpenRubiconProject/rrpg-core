@@ -1,7 +1,7 @@
 package com.openrubicon.core.api.cooldowns;
 
-import com.openrubicon.core.configuration.Configuration;
-
+import com.openrubicon.core.RRPGCore;
+import com.openrubicon.core.configuration.CooldownReductionCap;
 abstract public class Cooldown {
     
     private String moduleName = "default";
@@ -80,8 +80,8 @@ abstract public class Cooldown {
     }
 
     public void setCooldownReduction(int cooldownReduction) {
-        if(cooldownReduction > Configuration.COOLDOWN_REDUCTION_CAP)
-            cooldownReduction = Configuration.COOLDOWN_REDUCTION_CAP;
+        if(cooldownReduction > (int)RRPGCore.config.get(CooldownReductionCap.class).getProperty())
+            cooldownReduction = (int)RRPGCore.config.get(CooldownReductionCap.class).getProperty();
         this.cooldownReduction = cooldownReduction;
     }
 

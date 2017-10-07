@@ -23,7 +23,7 @@ public final class ActionBarManager {
                 continue;
 
             actionBar.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Helpers.colorize(abMessage.getMessage())));
-            actionBar.getCooldown().setLength(abMessage.getLength());
+            actionBar.getCooldown().setLength(abMessage.getCooldownLengthTicks());
             ActionBarCooldownManager.start(actionBar.getCooldown());
         }
     }

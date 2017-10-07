@@ -3,8 +3,17 @@ package com.openrubicon.core.api.interactables.interfaces;
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 
+import java.util.ArrayList;
+
 public interface Interactable {
     void sendMessage(String message);
+    default void sendMessage(ArrayList<String> message)
+    {
+        for(int i = 0; i < message.size(); i++)
+        {
+            this.sendMessage(message.get(i));
+        }
+    }
     InteractableType getInteractableType();
     InteractableSenderVisibility getInteractableSenderVisibility();
     default void senderTypeError()

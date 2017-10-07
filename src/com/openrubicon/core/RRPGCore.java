@@ -2,6 +2,8 @@ package com.openrubicon.core;
 
 import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.command.CommandService;
+import com.openrubicon.core.api.configuration.Configuration;
+import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
@@ -10,11 +12,15 @@ import com.openrubicon.core.commands.*;
 import com.openrubicon.core.commands.account.Link;
 import com.openrubicon.core.commands.account.Login;
 import com.openrubicon.core.commands.account.Register;
-import com.openrubicon.core.configuration.Configuration;
 import com.openrubicon.core.api.connector.ConnectorServer;
 import com.openrubicon.core.api.database.Database;
 import com.openrubicon.core.api.database.DatabaseMigrator;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
+import com.openrubicon.core.configuration.ConnectorPort;
+import com.openrubicon.core.configuration.CooldownReductionCap;
+import com.openrubicon.core.configuration.DevMode;
+import com.openrubicon.core.configuration.DiscordAppToken;
+import com.openrubicon.core.configuration.database.*;
 import com.openrubicon.core.database.models.DiscordTextChannel;
 import com.openrubicon.core.database.models.Player;
 import com.openrubicon.core.events.EventListener;
@@ -35,6 +41,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * RRPGCore
@@ -45,7 +52,7 @@ import java.util.ArrayList;
  *
  *   TODO:
  *      - Discord Integration (Authentication, communication each way, commands)
- *      - Make configuration modular (Other modules should see main config)
+ *      - v Make configuration modular (Other modules should see main config)
  *      - Make a decision on porting over durability, elements, rarity, modification (Anvil)
  *      - v Build authentication API
  *      - v Port over the combat API
@@ -71,7 +78,6 @@ import java.util.ArrayList;
  */
 public class RRPGCore extends JavaPlugin implements Module {
 
-    private final boolean devMode = true;      // Dev mode
     public static Configuration config;        // Configuration instance
     public static ConnectorServer connector;   // Connector server
     public static Discord discord;             // Discord server
@@ -102,6 +108,7 @@ public class RRPGCore extends JavaPlugin implements Module {
         commands.add(new DiscordRestart());
         commands.add(new ConnectorRestart());
         commands.add(new ConfigGet());
+        commands.add(new ConfigSet());
         commands.add(new RRPG());
         commands.add(new Register());
         commands.add(new Login());
@@ -115,6 +122,21 @@ public class RRPGCore extends JavaPlugin implements Module {
         ArrayList<PostDatabaseLoad> loads = new ArrayList<>();
         loads.add(new DatabaseMigrator(RRPGCore.modules.getDatabaseModels()));
         return loads;
+    }
+
+    @Override
+    public LinkedList<ConfigurationProperty> getConfigurationProperties() {
+        LinkedList<ConfigurationProperty> properties = new LinkedList<>();
+        properties.add(new DatabaseHost());
+        properties.add(new DatabaseName());
+        properties.add(new DatabasePassword());
+        properties.add(new DatabasePort());
+        properties.add(new DatabaseUsername());
+        properties.add(new ConnectorPort());
+        properties.add(new CooldownReductionCap());
+        properties.add(new DevMode());
+        properties.add(new DiscordAppToken());
+        return properties;
     }
 
     @Override
@@ -138,7 +160,6 @@ public class RRPGCore extends JavaPlugin implements Module {
         getLogger().info(Helpers.colorize(Configuration.PRIMARY_COLOR + "Beginning Loading Process.."));
 
         RRPGCore.plugin = this;
-        this.establishConfig();
 
         MaterialGroups.initialize();
         getLogger().info("Established Material Groups..");
@@ -167,15 +188,17 @@ public class RRPGCore extends JavaPlugin implements Module {
     {
         getLogger().info("Beginning Enabling Process..");
 
-        RRPGCore.config = new Configuration(devMode);
+        this.establishConfig();
+        RRPGCore.config = new Configuration(this.getConfig());
+        RRPGCore.config.add(RRPGCore.modules.getConfigurationProperties());
+        RRPGCore.config.load();
         getLogger().info("Configuration loaded.");
 
         this.loadDatabase();
-        //getLogger().info("Database connected");
 
-        this.loadConnector(Configuration.CONNECTOR_PORT);
+        this.loadConnector((int)config.get(ConnectorPort.class).getProperty());
 
-        this.loadDiscord(Configuration.DISCORD_APP_TOKEN);
+        this.loadDiscord((String)config.get(DiscordAppToken.class).getProperty());
 
         this.loadServices();
 
@@ -212,6 +235,7 @@ public class RRPGCore extends JavaPlugin implements Module {
             @Override
             public void run() {
                 RRPGCore.config.save();
+                saveConfig();
             }
         }, 6000, 6000);
 
@@ -251,7 +275,11 @@ public class RRPGCore extends JavaPlugin implements Module {
             File file = new File(getDataFolder(), "config.yml");
             if (!file.exists()) {
                 getLogger().info("Configuration not found, creating...");
-                saveDefaultConfig();
+                this.saveDefaultConfig();
+                Configuration config = new Configuration(this.getConfig());
+                config.add(RRPGCore.modules.getConfigurationProperties());
+                config.initializeConfigFile();
+                this.saveConfig();
             } else {
                 getLogger().info("Configuration found, loading...");
             }
@@ -268,12 +296,11 @@ public class RRPGCore extends JavaPlugin implements Module {
      * Runs in async to speed up loading times and play times.
      */
     private void loadDatabase() {
-        final String host = Configuration.DB_HOST;
-        final String port = Configuration.DB_PORT;
-        final String username = Configuration.DB_USER;
-        final String password = Configuration.DB_PASS;
-        final String name = Configuration.DB_NAME;
-        //final String url = "jdbc:mysql://localhost:3306/" + Configuration.DB_NAME;
+        final String host = (String)config.get(DatabaseHost.class).getProperty();
+        final String port = (String)config.get(DatabasePort.class).getProperty();
+        final String username = (String)config.get(DatabaseUsername.class).getProperty();
+        final String password = (String)config.get(DatabasePassword.class).getProperty();
+        final String name = (String)config.get(DatabaseName.class).getProperty();
 
         getLogger().info("Establishing Database Thread...");
         this.getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
@@ -285,9 +312,17 @@ public class RRPGCore extends JavaPlugin implements Module {
                 Database.initialize(host, port, username, password, name);
 
                 RRPGCore.database = new Database();
-                getLogger().info("Database Connection Established.");
 
-                RRPGCore.database.setLoaded(true);
+                if(Database.connection().get() == null)
+                {
+                    getLogger().warning("===========================");
+                    getLogger().warning("Database Connection Failed.");
+                    getLogger().warning("===========================");
+                    RRPGCore.database.setLoaded(false);
+                } else {
+                    getLogger().info("Database Connection Established.");
+                    RRPGCore.database.setLoaded(true);
+                }
 
                 for(PostDatabaseLoad load : RRPGCore.modules.getPostDatabaseLoads())
                 {

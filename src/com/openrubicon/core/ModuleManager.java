@@ -1,6 +1,7 @@
 package com.openrubicon.core;
 
 import com.openrubicon.core.api.command.Command;
+import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.interfaces.Module;
@@ -10,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 /**
  * RRPG Core
@@ -91,5 +93,15 @@ public class ModuleManager {
             loads.addAll(((Module)module).getPostDatabaseLoads());
         }
         return loads;
+    }
+
+    public LinkedList<ConfigurationProperty> getConfigurationProperties()
+    {
+        LinkedList<ConfigurationProperty> properties = new LinkedList<>();
+        for(JavaPlugin module : this.getModules().values())
+        {
+            properties.addAll(((Module)module).getConfigurationProperties());
+        }
+        return properties;
     }
 }

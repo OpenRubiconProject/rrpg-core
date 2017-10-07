@@ -1,63 +1,45 @@
 package com.openrubicon.core.api.actionbar;
 
+import com.openrubicon.core.api.cooldowns.interfaces.Cooldownable;
 import com.openrubicon.core.api.enums.Priority;
+import com.openrubicon.core.api.interfaces.Prioritable;
+import com.openrubicon.core.api.message.Message;
 import com.openrubicon.core.helpers.Helpers;
 
-public class ActionBarMessage {
+public class ActionBarMessage extends Message implements Cooldownable, Prioritable {
 
-    private String message;
     private Priority priority;
-    private int length = 60;
-
-    public ActionBarMessage()
-    {
-        this.message = "";
-        this.priority = Priority.NORMAL;
-    }
+    private int cooldownLengthTicks = 60;
 
     public ActionBarMessage(String message) {
-        this.message = message;
+        super(message);
         this.priority = Priority.NORMAL;
     }
 
     public ActionBarMessage(String message, Priority priority) {
-        this.message = message;
+        super(message);
         this.priority = priority;
     }
 
-    public ActionBarMessage(String message, int length) {
-        this.message = message;
-        this.length = length;
+    public ActionBarMessage(String message, int cooldownLengthTicks) {
+        super(message);
+        this.cooldownLengthTicks = cooldownLengthTicks;
     }
 
-    public ActionBarMessage(String message, Priority priority, int length) {
-        this.message = message;
+    public ActionBarMessage(String message, Priority priority, int cooldownLengthTicks) {
+        super(message);
         this.priority = priority;
-        this.length = length;
+        this.cooldownLengthTicks = cooldownLengthTicks;
     }
 
-    public int getLength() {
-        return length;
+    @Override
+    public int getCooldownLengthTicks() {
+        return this.cooldownLengthTicks;
     }
 
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public String getMessage() {
-        return Helpers.colorize(message);
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
+    @Override
     public Priority getPriority() {
         return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
     }
 
 }
