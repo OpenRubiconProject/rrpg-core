@@ -26,6 +26,16 @@ public class Discord implements Errorable, Startable {
         Discord.api.shutdownNow();
     }
 
+    @Override
+    public String getError() {
+        return null;
+    }
+
+    @Override
+    public void restart() {
+
+    }
+
     public void start()
     {
         try {

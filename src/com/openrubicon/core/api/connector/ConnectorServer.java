@@ -71,7 +71,17 @@ public class ConnectorServer implements Errorable, Startable {
     }
 
     @Override
+    public void restart() {
+
+    }
+
+    @Override
     public boolean isErrored() {
         return errored;
+    }
+
+    @Override
+    public String getError() {
+        return null;
     }
 }
