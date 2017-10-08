@@ -16,6 +16,7 @@ public interface Interactable {
     }
     InteractableType getInteractableType();
     InteractableSenderVisibility getInteractableSenderVisibility();
+    String getId();
     default void senderTypeError()
     {
         sendMessage("This type of client doesn't support this command.");

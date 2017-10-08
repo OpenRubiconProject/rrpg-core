@@ -36,8 +36,7 @@ public class Link extends Command {
 
         if(sender.getInteractableType() == InteractableType.PLAYER)
         {
-            Player player = (Player) sender;
-            if(accountManagement.linkMinecraft(args[0], args[1], player.getPlayer().getUniqueId().toString()))
+            if(accountManagement.linkMinecraft(args[0], args[1], sender.getId()))
                 sender.sendMessage("Linked successfully");
             else
                 sender.sendMessage("Linking failed");
@@ -45,8 +44,7 @@ public class Link extends Command {
 
         if(sender.getInteractableType() == InteractableType.DISCORD)
         {
-            Discord discord = (Discord) sender;
-            if(accountManagement.linkDiscord(args[0], args[1], discord.getAuthor().getIdLong()))
+            if(accountManagement.linkDiscord(args[0], args[1], sender.getId()))
                 sender.sendMessage("Linked successfully");
             else
                 sender.sendMessage("Linking failed");

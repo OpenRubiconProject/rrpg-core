@@ -47,4 +47,9 @@ public class Discord implements Interactable {
     public InteractableSenderVisibility getInteractableSenderVisibility() {
         return this.interactableSenderVisibility;
     }
+
+    @Override
+    public String getId() {
+        return this.author.getId();
+    }
 }

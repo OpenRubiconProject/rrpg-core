@@ -28,4 +28,9 @@ public class Console implements Interactable {
     public InteractableSenderVisibility getInteractableSenderVisibility() {
         return InteractableSenderVisibility.NOT_APPLICABLE;
     }
+
+    @Override
+    public String getId() {
+        return "0";
+    }
 }

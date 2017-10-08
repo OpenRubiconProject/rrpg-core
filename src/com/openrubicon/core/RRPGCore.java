@@ -23,8 +23,7 @@ import com.openrubicon.core.configuration.CooldownReductionCap;
 import com.openrubicon.core.configuration.DevMode;
 import com.openrubicon.core.configuration.DiscordAppToken;
 import com.openrubicon.core.configuration.database.*;
-import com.openrubicon.core.database.models.DiscordTextChannel;
-import com.openrubicon.core.database.models.Player;
+import com.openrubicon.core.database.models.*;
 import com.openrubicon.core.events.EventListener;
 import com.openrubicon.core.events.FiveMinuteEvent;
 import com.openrubicon.core.events.FiveTickEvent;
@@ -34,7 +33,7 @@ import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.core.api.vault.economy.Economy;
 import com.openrubicon.core.interfaces.Module;
 import com.openrubicon.core.api.services.ServiceManager;
-import com.openrubicon.core.server.playerdata.PlayerModel;
+import com.openrubicon.core.server.playerdata.MinecraftPlayerModel;
 import com.openrubicon.core.server.playerdata.PreviousLocation;
 import com.openrubicon.core.server.playerdata.TopSpeed;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -78,7 +77,7 @@ import java.util.LinkedList;
  *      - Add system for pirate protection
  *      - Build server API which Discord, Connector, Modules, and Web can hook into. Shows stats like current/max players, whos online, etc.
  *      - Build management API which Discord, Connector, Modules, and Web can hook into
- *      - Create event hooks for triggering the custom events
+ *      - (Main ones done) Create event hooks for triggering the custom events
  *      - v Database Migrations versioning table
  *
  *
@@ -109,7 +108,10 @@ public class RRPGCore extends JavaPlugin implements Module {
     public ArrayList<DatabaseModel> getDatabaseModels() {
         ArrayList<DatabaseModel> models = new ArrayList<>();
         models.add(new DiscordTextChannel());
-        models.add(new Player());
+        //models.add(new Player());
+        models.add(new Account());
+        models.add(new DiscordAccount());
+        models.add(new MinecraftPlayer());
         return models;
     }
 
@@ -154,7 +156,7 @@ public class RRPGCore extends JavaPlugin implements Module {
     @Override
     public ArrayList<PlayerData> getPlayerDatas() {
         ArrayList<PlayerData> playerDatas = new ArrayList<>();
-        playerDatas.add(new PlayerModel());
+        playerDatas.add(new MinecraftPlayerModel());
         playerDatas.add(new PreviousLocation());
         playerDatas.add(new TopSpeed());
         return playerDatas;

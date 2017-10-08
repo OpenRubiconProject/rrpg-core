@@ -37,7 +37,7 @@ public class EventListener implements Listener {
             if (yVel < RRPGCore.players.getPlayerData(p, TopSpeed.class).getSpeed().getY())
             {
                 RRPGCore.players.getPlayerData(p, TopSpeed.class).getSpeed().setY(yVel);
-                Bukkit.broadcastMessage(RRPGCore.players.getPlayerData(p, TopSpeed.class).getSpeed().getY()+"");
+                //Bukkit.broadcastMessage(RRPGCore.players.getPlayerData(p, TopSpeed.class).getSpeed().getY()+"");
             }
 
         }
