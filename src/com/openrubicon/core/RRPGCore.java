@@ -8,6 +8,7 @@ import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
 import com.openrubicon.core.api.reflection.Reflection;
+import com.openrubicon.core.api.server.Players;
 import com.openrubicon.core.commands.*;
 import com.openrubicon.core.commands.account.Link;
 import com.openrubicon.core.commands.account.Login;
@@ -24,7 +25,9 @@ import com.openrubicon.core.configuration.database.*;
 import com.openrubicon.core.database.models.DiscordTextChannel;
 import com.openrubicon.core.database.models.Player;
 import com.openrubicon.core.events.EventListener;
+import com.openrubicon.core.events.FiveMinuteEvent;
 import com.openrubicon.core.events.FiveTickEvent;
+import com.openrubicon.core.events.OneTickEvent;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.core.api.vault.economy.Economy;
@@ -92,7 +95,11 @@ public class RRPGCore extends JavaPlugin implements Module {
 
     public static ModuleManager modules;       // Module manager
 
+    public static Players players;             // Players
+
     public static boolean fatalError = false;  // Loading fatal error flag
+
+    public static boolean doneLoading = false;  // Done loading
 
     @Override
     public ArrayList<DatabaseModel> getDatabaseModels() {
@@ -121,6 +128,7 @@ public class RRPGCore extends JavaPlugin implements Module {
     public ArrayList<PostDatabaseLoad> getPostDatabaseLoads() {
         ArrayList<PostDatabaseLoad> loads = new ArrayList<>();
         loads.add(new DatabaseMigrator(RRPGCore.modules.getDatabaseModels()));
+        loads.add(RRPGCore.players);
         return loads;
     }
 
@@ -181,6 +189,7 @@ public class RRPGCore extends JavaPlugin implements Module {
     {
         RRPGCore.connector.shutdown();
         RRPGCore.discord.shutdown();
+        RRPGCore.doneLoading = false;
     }
 
     @Override
@@ -195,6 +204,8 @@ public class RRPGCore extends JavaPlugin implements Module {
         getLogger().info("Configuration loaded.");
 
         this.loadDatabase();
+
+        RRPGCore.players = new Players();
 
         this.loadConnector((int)config.get(ConnectorPort.class).getProperty());
 
@@ -221,6 +232,15 @@ public class RRPGCore extends JavaPlugin implements Module {
         this.setupChat();
         getLogger().info("Established Chat");
 
+        getLogger().info("Scheduling 1 Tick Event");
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                OneTickEvent event = new OneTickEvent();
+                Bukkit.getPluginManager().callEvent(event);
+            }
+        }, 1, 1);
+
         getLogger().info("Scheduling 5 Tick Event");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
@@ -236,6 +256,9 @@ public class RRPGCore extends JavaPlugin implements Module {
             public void run() {
                 RRPGCore.config.save();
                 saveConfig();
+
+                FiveMinuteEvent event = new FiveMinuteEvent();
+                Bukkit.getPluginManager().callEvent(event);
             }
         }, 6000, 6000);
 
@@ -338,6 +361,8 @@ public class RRPGCore extends JavaPlugin implements Module {
                     MessageChannel ch = Discord.getApi().getTextChannelById(channel.getChannel_id());
                     DiscordEventTestListener.channels.add(ch);
                 }
+
+                RRPGCore.doneLoading = true;
 
             }
 

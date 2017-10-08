@@ -151,32 +151,38 @@ public class Player extends DatabaseModel<Player> {
 
     public List<Player> getAll()
     {
-        return this.getConnection().get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null").executeAndFetch(Player.class);
+        return this.selectAll().executeFetch(Player.class);
+        //return this.getConnection().get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null").executeAndFetch(Player.class);
     }
 
     public void insertPlayer()
     {
-        String sql = "INSERT INTO rubicon_players (uuid, username, email, password display_name) VALUES (:uuid, :username, :email, :password, :display_name)";
+        this.insert("uuid, username, email, password display_name", ":uuid, :username, :email, :password, :display_name").executeInsert();
 
-        this.getConnection().get().createQuery(sql, true).bind(this).executeUpdate().getKey();
+        //String sql = "INSERT INTO rubicon_players (uuid, username, email, password display_name) VALUES (:uuid, :username, :email, :password, :display_name)";
+
+        //this.getConnection().get().createQuery(sql, true).bind(this).executeUpdate().getKey();
     }
 
     public Player getPlayer()
     {
-        List<Player> p = this.getConnection().get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(this).executeAndFetch(Player.class);
-        return p.get(0);
+        return this.selectAll().where("uuid", ":uuid").executeFetchFirst(Player.class);
+        //List<Player> p = this.getConnection().get().createQuery("SELECT id,uuid,username,display_name,email,discord_id,token,last_joined,created_at,updated_at,deleted_at FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(this).executeAndFetch(Player.class);
+        //return p.get(0);
     }
 
     public boolean exists()
     {
-        return this.getConnection().get().createQuery("SELECT count(id) FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(this).executeScalar(Integer.class) >= 1;
+        return this.count("id").where("uuid", ":uuid").executeCount() == 1;
+        //return this.getConnection().get().createQuery("SELECT count(id) FROM rubicon_players WHERE deleted_at is null AND uuid = :uuid").bind(this).executeScalar(Integer.class) >= 1;
     }
 
     public void updatePlayer()
     {
-        String sql = "UPDATE rubicon_players SET display_name = :display_name, username = :username, last_joined = :last_joined, token = :token, discord_id = :discord_id, verified = :verified WHERE id = :id";
+        this.update().set("display_name").set("username").set("last_joined").set("token").set("discord_id").set("verified").where("id", ":id").touch().executeUpdate();
+        //String sql = "UPDATE rubicon_players SET display_name = :display_name, username = :username, last_joined = :last_joined, token = :token, discord_id = :discord_id, verified = :verified WHERE id = :id";
 
-        this.getConnection().get().createQuery(sql).bind(this).executeUpdate();
+        //this.getConnection().get().createQuery(sql).bind(this).executeUpdate();
     }
 
     @Override
