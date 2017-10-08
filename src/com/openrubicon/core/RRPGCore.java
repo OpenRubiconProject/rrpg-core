@@ -59,14 +59,14 @@ import java.util.LinkedList;
  *   TODO:
  *      - Discord Integration (Authentication, communication each way, commands)
  *      - v Make configuration modular (Other modules should see main config)
- *      - Make a decision on porting over durability, elements, rarity, modification (Anvil)
+ *      - v Make a decision on porting over durability, elements, rarity, modification (Anvil)
  *      - v Build authentication API
  *      - v Port over the combat API
  *      - v Potentially port over some events other events: PlayerLandOnGround, PlayerLookingAtEntity etc.
  *      - Create an API bridge for Vault perms and chat
  *      - Make Connector do something (RESTful API which interacts real time with server)
  *      - Make a stat tracking API
- *      - Add commands for altering configuration values and debug. Also for rebooting the Discord, Database, and Connector configurations.
+ *      - v Add commands for altering configuration values and debug. Also for rebooting the Discord, Database, and Connector configurations.
  *      - Finish Database Query Builder
  *      - Finish HorseInventory
  *      - v Move Enums to better directories
