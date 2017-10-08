@@ -1,11 +1,11 @@
-package com.openrubicon.core.api.server;
+package com.openrubicon.core.api.server.players;
 
+import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
+import com.openrubicon.core.api.server.players.interfaces.PlayerData;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,10 +14,7 @@ import java.util.UUID;
 
 public class Players implements PostDatabaseLoad {
 
-    private static HashMap<OfflinePlayer, com.openrubicon.core.database.models.Player> players = new HashMap<>();
-
-    private static HashMap<OfflinePlayer, Vector> playerTopSpeed = new HashMap<>();
-    private static HashMap<OfflinePlayer, Location> playerPreviousLocation = new HashMap<>();
+    private static HashMap<OfflinePlayer, com.openrubicon.core.api.server.players.Player> players = new HashMap<>();
 
     public OfflinePlayer getPlayer(String uuid)
     {
@@ -52,43 +49,37 @@ public class Players implements PostDatabaseLoad {
 
     public void addPlayer(Player p)
     {
-        com.openrubicon.core.database.models.Player player = new com.openrubicon.core.database.models.Player();
-        player.setUuid(p.getUniqueId().toString());
+        com.openrubicon.core.api.server.players.Player player = new com.openrubicon.core.api.server.players.Player();
 
-        if(player.exists())
-            player = player.getPlayer();
-        else
-            player = null;
+        for(PlayerData playerDataType : RRPGCore.modules.getPlayerDatas())
+        {
+            try {
+                PlayerData playerData = playerDataType.getClass().newInstance();
+                playerData.initialize(p);
+                player.addData(playerData);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         players.put(p, player);
-        playerTopSpeed.put(p, new Vector(0.,0.,0.));
-        playerPreviousLocation.put(p, p.getLocation());
     }
 
     public void removePlayer(OfflinePlayer player)
     {
-        if(this.isRegistered(player))
+        for(PlayerData playerData : players.get(player).getPlayerDatas())
         {
-            players.get(player).update().touch().executeUpdate();
+            playerData.destruct(player);
         }
         players.remove(player);
-        playerTopSpeed.remove(player);
-        playerPreviousLocation.remove(player);
     }
 
-    public boolean isRegistered(OfflinePlayer player)
+    public <T extends PlayerData> T getPlayerData(OfflinePlayer player, Class<T> dataType)
     {
-        if(players.get(player) != null)
-            return true;
-        return false;
-    }
-
-    public static HashMap<OfflinePlayer, Vector> getPlayerTopSpeed() {
-        return playerTopSpeed;
-    }
-
-    public static HashMap<OfflinePlayer, Location> getPlayerPreviousLocation() {
-        return playerPreviousLocation;
+        return players.get(player).getData(dataType);
     }
 
     @Override

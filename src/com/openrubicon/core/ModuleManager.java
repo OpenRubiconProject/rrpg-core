@@ -4,6 +4,7 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
+import com.openrubicon.core.api.server.players.interfaces.PlayerData;
 import com.openrubicon.core.interfaces.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -103,5 +104,15 @@ public class ModuleManager {
             properties.addAll(((Module)module).getConfigurationProperties());
         }
         return properties;
+    }
+
+    public ArrayList<PlayerData> getPlayerDatas()
+    {
+        ArrayList<PlayerData> playerDatas = new ArrayList<>();
+        for(JavaPlugin module : this.getModules().values())
+        {
+            playerDatas.addAll(((Module)module).getPlayerDatas());
+        }
+        return playerDatas;
     }
 }

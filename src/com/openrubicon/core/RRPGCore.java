@@ -8,7 +8,8 @@ import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
 import com.openrubicon.core.api.reflection.Reflection;
-import com.openrubicon.core.api.server.Players;
+import com.openrubicon.core.api.server.players.Players;
+import com.openrubicon.core.api.server.players.interfaces.PlayerData;
 import com.openrubicon.core.commands.*;
 import com.openrubicon.core.commands.account.Link;
 import com.openrubicon.core.commands.account.Login;
@@ -33,6 +34,9 @@ import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.core.api.vault.economy.Economy;
 import com.openrubicon.core.interfaces.Module;
 import com.openrubicon.core.api.services.ServiceManager;
+import com.openrubicon.core.server.playerdata.PlayerModel;
+import com.openrubicon.core.server.playerdata.PreviousLocation;
+import com.openrubicon.core.server.playerdata.TopSpeed;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -145,6 +149,15 @@ public class RRPGCore extends JavaPlugin implements Module {
         properties.add(new DevMode());
         properties.add(new DiscordAppToken());
         return properties;
+    }
+
+    @Override
+    public ArrayList<PlayerData> getPlayerDatas() {
+        ArrayList<PlayerData> playerDatas = new ArrayList<>();
+        playerDatas.add(new PlayerModel());
+        playerDatas.add(new PreviousLocation());
+        playerDatas.add(new TopSpeed());
+        return playerDatas;
     }
 
     @Override
