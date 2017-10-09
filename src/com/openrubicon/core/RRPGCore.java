@@ -28,6 +28,7 @@ import com.openrubicon.core.events.EventListener;
 import com.openrubicon.core.events.FiveMinuteEvent;
 import com.openrubicon.core.events.FiveTickEvent;
 import com.openrubicon.core.events.OneTickEvent;
+import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
 import com.openrubicon.core.api.vault.economy.Economy;
@@ -180,7 +181,7 @@ public class RRPGCore extends JavaPlugin implements Module {
     @Override
     public void onLoad()
     {
-        getLogger().info(Helpers.colorize(Configuration.PRIMARY_COLOR + "Beginning Loading Process.."));
+        getLogger().info(Helpers.colorize(Constants.PRIMARY_COLOR + "Beginning Loading Process.."));
 
         RRPGCore.plugin = this;
 

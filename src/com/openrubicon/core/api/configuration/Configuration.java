@@ -8,23 +8,6 @@ import java.util.LinkedList;
 
 public class Configuration implements Persistable {
 
-    public static String PRIMARY_COLOR = "&2";
-    public static String SECONDARY_COLOR = "&a";
-    public static String TERTIARY_COLOR = "&b";
-
-    public static String HEADING_COLOR = "&6";
-
-    public static String MYSTIC_PRIMARY_COLOR = "&d";
-    public static String MYSTIC_SECONDARY_COLOR = "&5";
-
-    public static String BOLD = "&l";
-    public static String RESET_FORMAT = "&r";
-
-    public static String RED = "&c";
-    public static String YELLOW = "&e";
-    public static String GREEN = "&a";
-
-
     /**  */
 
 

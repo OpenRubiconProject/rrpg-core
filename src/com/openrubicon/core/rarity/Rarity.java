@@ -1,8 +1,8 @@
 package com.openrubicon.core.rarity;
 
-import com.openrubicon.core.api.configuration.Configuration;
 import com.openrubicon.core.api.interfaces.Loreable;
 import com.openrubicon.core.api.interfaces.Observeable;
+import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 
 import java.io.Serializable;
@@ -114,7 +114,7 @@ abstract public class Rarity implements Observeable, Loreable, Serializable {
     @Override
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(Configuration.PRIMARY_COLOR + "Rarity: " + this.getColoredName());
+        lore.add(Constants.PRIMARY_COLOR + "Rarity: " + this.getColoredName());
         return lore;
     }
 }

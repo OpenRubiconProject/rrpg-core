@@ -1,6 +1,6 @@
 package com.openrubicon.core.api.interfaces;
 
-public interface Metadataable {
+public interface Metable {
 
     String getName();
     String getDescription();

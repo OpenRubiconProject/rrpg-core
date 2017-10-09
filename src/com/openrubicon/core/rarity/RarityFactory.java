@@ -1,22 +1,6 @@
 package com.openrubicon.core.rarity;
 
-import com.shawnclake.economics.item.Item;
-import de.tr7zw.itemnbtapi.NBTItem;
-
 public class RarityFactory {
-
-    public static Rarity load(NBTItem i)
-    {
-        Item item = new Item();
-        item.load(i);
-        return load(item);
-    }
-
-    public static Rarity load(Item i)
-    {
-        int rarity = (int)i.getItem().getRarityScore();
-        return make(rarity);
-    }
 
     public static Rarity make(int rarity)
     {

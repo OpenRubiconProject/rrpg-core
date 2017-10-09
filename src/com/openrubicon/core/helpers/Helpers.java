@@ -84,6 +84,11 @@ public class Helpers {
         return ThreadLocalRandom.current().nextDouble(min, max);
     }
 
+    public static float randomFloat(float min, float max)
+    {
+        return (ThreadLocalRandom.current().nextFloat() * (max - min)) + min;
+    }
+
     public static int randomInt(int min, int max)
     {
         return (Helpers.rng.nextInt(max - min)) + min;
@@ -96,6 +101,11 @@ public class Helpers {
     public static String camelCaseToReadable(String camelCase)
     {
         return StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(camelCase), ' ');
+    }
+
+    public static int secondsToTicks(int seconds)
+    {
+        return seconds * 20;
     }
 
     public static String[] toArray(ArrayList<String> strings)
