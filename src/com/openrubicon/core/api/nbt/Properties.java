@@ -7,6 +7,8 @@ import java.util.Map;
 
 public class Properties implements Persistable {
 
+    public static final String NBT_PROPERTIES = "NBT_PROPERTIES";
+
     private HashMap<String, String> properties = new HashMap<>();
 
     private String persistenceString;
