@@ -1,6 +1,8 @@
 package com.openrubicon.core.api.nbt;
 
+import de.tr7zw.itemnbtapi.NBTCompound;
 import de.tr7zw.itemnbtapi.NBTItem;
+import de.tr7zw.itemnbtapi.NBTList;
 import de.tr7zw.itemnbtapi.NBTType;
 import org.bukkit.inventory.ItemStack;
 
@@ -75,19 +77,19 @@ public class NBT extends NBTItem {
         return super.getItem();
     }
 
-    public Compound addCompound(String key)
+    public NBTCompound addCompound(String key)
     {
-        return (Compound)super.addCompound(key);
+        return super.addCompound(key);
     }
 
-    public Compound getCompound(String key)
+    public NBTCompound getCompound(String key)
     {
-        return (Compound)super.getCompound(key);
+        return super.getCompound(key);
     }
 
-    public List getList(String listName)
+    public NBTList getList(String listName)
     {
-        return (List)getList(listName, NBTType.NBTTagCompound);
+        return super.getList(listName, NBTType.NBTTagCompound);
     }
 
 }

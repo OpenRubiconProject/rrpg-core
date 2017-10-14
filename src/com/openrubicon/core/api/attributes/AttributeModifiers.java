@@ -1,12 +1,12 @@
 package com.openrubicon.core.api.attributes;
 
-import com.openrubicon.core.api.nbt.ListCompound;
 import com.openrubicon.core.api.nbt.NBT;
-import com.openrubicon.core.api.nbt.List;
 import com.openrubicon.core.api.attributes.enums.AttributeModifierType;
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.api.interfaces.Observeable;
+import de.tr7zw.itemnbtapi.NBTList;
+import de.tr7zw.itemnbtapi.NBTListCompound;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class AttributeModifiers implements Observeable {
 
-    public HashMap<AttributeModifierType, AttributeModifier> modifiers = new HashMap<>();
+    private HashMap<AttributeModifierType, AttributeModifier> modifiers = new HashMap<>();
 
     public AttributeModifiers() {
 
@@ -31,23 +31,23 @@ public class AttributeModifiers implements Observeable {
         this.load(i);
     }
 
-    public HashMap<AttributeModifierType, AttributeModifier> getAll()
+    public HashMap<AttributeModifierType, AttributeModifier> getModifiers()
     {
         return this.modifiers;
     }
 
     public boolean load(NBT i)
     {
-        List attributes = i.getList("AttributeModifiers");
+        NBTList attributes = i.getList("AttributeModifiers");
         int size = attributes.size();
         if(size == 0 || size == -1)
             return true;
 
         for(int z = 0; z < size; z++)
         {
-            ListCompound modifier = attributes.getListCompound(z);
+            NBTListCompound modifier = attributes.getCompound(z);
             AttributeModifierType name = AttributeModifierType.fromString(modifier.getString("AttributeName"));
-            InventorySlotType slot = InventorySlotType.fromString(modifier.getString("Slot"));
+            EntityInventorySlotType slot = EntityInventorySlotType.fromString(modifier.getString("Slot"));
 
             modifiers.put(name, new AttributeModifier(name, modifier.getInteger("Operation"), modifier.getDouble("Amount")));
         }
@@ -64,24 +64,28 @@ public class AttributeModifiers implements Observeable {
 
     public boolean save(NBT i)
     {
-        List attributes = i.getList("AttributeModifiers");
+        NBTList attributes = i.getList("AttributeModifiers");
 
         for(AttributeModifier attribute : this.modifiers.values())
         {
-            ListCompound attrib = (ListCompound)attributes.addCompound();
+            NBTListCompound attrib = attributes.addCompound();
             attrib.setDouble("Amount", attribute.getAmount());
             attrib.setString("AttributeName", attribute.getName().toString());
             attrib.setString("Name", attribute.getName().toString());
             attrib.setInteger("Operation", attribute.getOperation());
             attrib.setInteger("UUIDLeast", 59764);
             attrib.setInteger("UUIDMost", 31483);
+
+            EntityInventorySlotType slot = attribute.getEntityInventorySlotType();
+            if(slot != EntityInventorySlotType.ALL)
+                attrib.setString("Slot", slot.toString());
         }
         return true;
     }
 
     public boolean removeAll(NBT i)
     {
-        List attributes = i.getList("AttributeModifiers");
+        NBTList attributes = i.getList("AttributeModifiers");
         int size = attributes.size();
 
         if(size == 0 || size == -1)

@@ -4,6 +4,7 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
+import com.openrubicon.core.api.recipes.interfaces.Recipe;
 import com.openrubicon.core.api.server.players.interfaces.PlayerData;
 
 import java.util.ArrayList;
@@ -24,6 +25,10 @@ public interface Module {
         return new ArrayList<>();
     }
     default ArrayList<PlayerData> getPlayerDatas()
+    {
+        return new ArrayList<>();
+    }
+    default ArrayList<Recipe> getRecipes()
     {
         return new ArrayList<>();
     }

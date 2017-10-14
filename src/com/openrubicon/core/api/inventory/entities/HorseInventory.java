@@ -1,4 +1,4 @@
-package com.openrubicon.core.api.inventory;
+package com.openrubicon.core.api.inventory.entities;
 
 import org.bukkit.entity.LivingEntity;
 

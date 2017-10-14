@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -101,6 +102,23 @@ public class Helpers {
     public static String camelCaseToReadable(String camelCase)
     {
         return StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(camelCase), ' ');
+    }
+
+    public static <T> T random(ArrayList<T> list)
+    {
+        int size = list.size();
+
+        if(size == 0)
+            return null;
+
+        int index = randomInt(0, size);
+
+        return list.get(index);
+    }
+
+    public static <T> T random(HashSet<T> hashList)
+    {
+        return random(new ArrayList<>(hashList));
     }
 
     public static int secondsToTicks(int seconds)

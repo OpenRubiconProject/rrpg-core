@@ -7,6 +7,8 @@ import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
+import com.openrubicon.core.api.recipes.RecipeService;
+import com.openrubicon.core.api.recipes.events.RecipeEventListener;
 import com.openrubicon.core.api.reflection.Reflection;
 import com.openrubicon.core.api.server.players.Players;
 import com.openrubicon.core.api.server.players.interfaces.PlayerData;
@@ -60,7 +62,7 @@ import java.util.LinkedList;
  *   TODO:
  *      - Discord Integration (Authentication, communication each way, commands)
  *      - v Make configuration modular (Other modules should see main config)
- *      - v Make a decision on porting over durability, elements, rarity, modification (Anvil)
+ *      - v Make a decision on porting over durability, elements, rarity, modification (AnvilInventory)
  *      - v Build authentication API
  *      - v Port over the combat API
  *      - v Potentially port over some events other events: PlayerLandOnGround, PlayerLookingAtEntity etc.
@@ -230,7 +232,10 @@ public class RRPGCore extends JavaPlugin implements Module {
         this.loadServices();
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
-        getLogger().info("Established Event Handler.");
+        getLogger().info("Established Core Event Handler.");
+
+        getServer().getPluginManager().registerEvents(new RecipeEventListener(), this);
+        getLogger().info("Established Recipe Event Handler.");
 
         if (!Bukkit.getPluginManager().isPluginEnabled("Vault"))
         {
@@ -394,7 +399,9 @@ public class RRPGCore extends JavaPlugin implements Module {
     private void loadServices()
     {
         getLogger().info("Establishing Services..");
+
         RRPGCore.services.create(new CommandService(this, RRPGCore.modules.getCommands()));
+        RRPGCore.services.create(new RecipeService(RRPGCore.modules.getRecipes()));
 
         getLogger().info("Established Services.");
     }

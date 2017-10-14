@@ -1,5 +1,7 @@
 package com.openrubicon.core.api.costs;
 
+import org.bukkit.entity.Player;
+
 abstract public class Cost {
 
     private float cost;
@@ -11,6 +13,10 @@ abstract public class Cost {
     public Cost(float cost) {
         this.cost = cost;
     }
+
+    abstract public boolean has(Player player);
+
+    abstract public void withdraw(Player player);
 
     public float getCost() {
         return cost;
@@ -34,5 +40,7 @@ abstract public class Cost {
     {
         cost -= decrease;
     }
+
+
 
 }

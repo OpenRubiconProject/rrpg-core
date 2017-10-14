@@ -1,6 +1,7 @@
 package com.openrubicon.core.api.attributes;
 
 import com.openrubicon.core.api.attributes.enums.AttributeModifierType;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
 
 import java.util.UUID;
 
@@ -11,6 +12,8 @@ public class AttributeModifier
     private double amount;
     private UUID uuidMost;
     private UUID uuidLeast;
+
+    private EntityInventorySlotType entityInventorySlotType = EntityInventorySlotType.MAINHAND;
 
     public AttributeModifier(AttributeModifierType attributeName)
     {
@@ -24,6 +27,14 @@ public class AttributeModifier
         this.amount = amount;
         this.uuidMost = UUID.randomUUID();
         this.uuidLeast = UUID.randomUUID();
+    }
+
+    public EntityInventorySlotType getEntityInventorySlotType() {
+        return entityInventorySlotType;
+    }
+
+    public void setEntityInventorySlotType(EntityInventorySlotType entityInventorySlotType) {
+        this.entityInventorySlotType = entityInventorySlotType;
     }
 
     public AttributeModifierType getName() {

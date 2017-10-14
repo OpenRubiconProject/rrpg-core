@@ -1,6 +1,8 @@
-package com.openrubicon.core.api.inventory;
+package com.openrubicon.core.api.inventory.entities;
 
-import com.openrubicon.core.api.inventory.enums.InventorySlotType;
+import com.openrubicon.core.api.inventory.Inventory;
+import com.openrubicon.core.api.inventory.entities.enums.EntityInventorySlotType;
+import com.openrubicon.core.api.inventory.interfaces.InventorySlotType;
 import com.openrubicon.core.helpers.MaterialGroups;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -16,47 +18,47 @@ public class LivingEntityInventory extends Inventory {
 
     public void setSlotItem(InventorySlotType slot, ItemStack item)
     {
-        if(slot == InventorySlotType.MAINHAND)
+        if(slot == EntityInventorySlotType.MAINHAND)
             this.entity.getEquipment().setItemInMainHand(item);
 
-        if(slot == InventorySlotType.OFFHAND)
+        if(slot == EntityInventorySlotType.OFFHAND)
             this.entity.getEquipment().setItemInOffHand(item);
 
-        if(slot == InventorySlotType.HELMET)
+        if(slot == EntityInventorySlotType.HELMET)
             this.entity.getEquipment().setHelmet(item);
 
-        if(slot == InventorySlotType.CHESTPLATE)
+        if(slot == EntityInventorySlotType.CHESTPLATE)
             this.entity.getEquipment().setChestplate(item);
 
-        if(slot == InventorySlotType.LEGGINGS)
+        if(slot == EntityInventorySlotType.LEGGINGS)
             this.entity.getEquipment().setLeggings(item);
 
-        if(slot == InventorySlotType.BOOTS)
+        if(slot == EntityInventorySlotType.BOOTS)
             this.entity.getEquipment().setBoots(item);
     }
 
-    public InventorySlotType getItemSlotType(ItemStack item)
+    public EntityInventorySlotType getItemSlotType(ItemStack item)
     {
-        InventorySlotType slot = InventorySlotType.MAINHAND;
+        EntityInventorySlotType slot = EntityInventorySlotType.MAINHAND;
 
         if(MaterialGroups.HELMETS.contains(item.getType()))
-            slot = InventorySlotType.HELMET;
+            slot = EntityInventorySlotType.HELMET;
 
         if(MaterialGroups.CHESTPLATES.contains(item.getType()))
-            slot = InventorySlotType.CHESTPLATE;
+            slot = EntityInventorySlotType.CHESTPLATE;
 
         if(MaterialGroups.LEGGINGS.contains(item.getType()))
-            slot = InventorySlotType.LEGGINGS;
+            slot = EntityInventorySlotType.LEGGINGS;
 
         if(MaterialGroups.BOOTS.contains(item.getType()))
-            slot = InventorySlotType.BOOTS;
+            slot = EntityInventorySlotType.BOOTS;
 
-        if(slot == InventorySlotType.MAINHAND)
+        if(slot == EntityInventorySlotType.MAINHAND)
         {
             if(this.entity.getEquipment().getItemInOffHand() == item)
             {
                 //Bukkit.broadcastMessage("WE SWITCHED TO OFFHAND");
-                slot = InventorySlotType.OFFHAND;
+                slot = EntityInventorySlotType.OFFHAND;
             }
         }
 
@@ -67,22 +69,22 @@ public class LivingEntityInventory extends Inventory {
     {
         ItemStack item = null;
 
-        if(slot == InventorySlotType.MAINHAND)
+        if(slot == EntityInventorySlotType.MAINHAND)
             item = this.entity.getEquipment().getItemInMainHand();
 
-        if(slot == InventorySlotType.OFFHAND)
+        if(slot == EntityInventorySlotType.OFFHAND)
             item = this.entity.getEquipment().getItemInOffHand();
 
-        if(slot == InventorySlotType.HELMET)
+        if(slot == EntityInventorySlotType.HELMET)
             item = this.entity.getEquipment().getHelmet();
 
-        if(slot == InventorySlotType.CHESTPLATE)
+        if(slot == EntityInventorySlotType.CHESTPLATE)
             item = this.entity.getEquipment().getChestplate();
 
-        if(slot == InventorySlotType.LEGGINGS)
+        if(slot == EntityInventorySlotType.LEGGINGS)
             item = this.entity.getEquipment().getLeggings();
 
-        if(slot == InventorySlotType.BOOTS)
+        if(slot == EntityInventorySlotType.BOOTS)
             item = this.entity.getEquipment().getBoots();
 
         return item;
