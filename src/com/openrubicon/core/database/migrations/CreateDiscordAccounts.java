@@ -14,8 +14,8 @@ public class CreateDiscordAccounts implements DatabaseMigration {
                 " `username` varchar(64) NOT NULL,\n" +
                 " `display_name` varchar(64) NOT NULL,\n" +
                 " `last_joined` datetime DEFAULT NULL,\n" +
-                " `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                " `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                 " `deleted_at` datetime DEFAULT NULL,\n" +
                 " PRIMARY KEY (`id`)\n" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");

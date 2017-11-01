@@ -3,6 +3,7 @@ package com.openrubicon.core.api.database;
 import com.openrubicon.core.api.database.interfaces.DatabaseMigration;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.database.models.ModelVersion;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,9 @@ public class DatabaseMigrator implements PostDatabaseLoad {
     public void run()
     {
         ModelVersion modelVersion = new ModelVersion();
+
+        DatabaseMigration modelVersionCreateMigration = modelVersion.getMigrations().get(1);
+        modelVersionCreateMigration.up(Database.connection());
 
         int version = modelVersion.getVersion();
         int lastUpdate;
@@ -86,6 +90,12 @@ public class DatabaseMigrator implements PostDatabaseLoad {
 
             for(int i = lastUpdate + 1; i <= version; i++)
             {
+                if(model.getMigrations() == null)
+                {
+                    Bukkit.getLogger().info("No Migrations for " + model.getTableName());
+                    continue;
+                }
+
                 DatabaseMigration migration = model.getMigrations().get(i);
                 if(migration == null)
                     continue;

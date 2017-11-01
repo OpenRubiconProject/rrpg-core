@@ -2,6 +2,7 @@ package com.openrubicon.core.api.server.players;
 
 import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
+import com.openrubicon.core.api.scoreboard.ScoreboardManager;
 import com.openrubicon.core.api.server.players.interfaces.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -66,6 +67,8 @@ public class Players implements PostDatabaseLoad {
         }
 
         players.put(p, player);
+
+        ScoreboardManager.addPlayer(p);
     }
 
     public void removePlayer(OfflinePlayer player)
@@ -75,6 +78,8 @@ public class Players implements PostDatabaseLoad {
             playerData.destruct(player);
         }
         players.remove(player);
+
+        ScoreboardManager.removePlayer(player);
     }
 
     public <T extends PlayerData> T getPlayerData(OfflinePlayer player, Class<T> dataType)

@@ -2,30 +2,35 @@ package com.openrubicon.core.api.cooldowns;
 
 import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.cooldowns.events.CooldownCompletedEvent;
+import com.openrubicon.core.api.cooldowns.events.PrepareCooldownEvent;
 import com.openrubicon.core.configuration.CooldownReductionCap;
 import org.bukkit.Bukkit;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class CooldownManager {
 
-    private static HashSet<Cooldown> cooldowns = new HashSet<>();
+    private static ArrayList<Cooldown> cooldowns = new ArrayList<>();
 
-    public static HashSet<Cooldown> getCooldowns() {
+    public static ArrayList<Cooldown> getCooldowns() {
         return cooldowns;
     }
 
     public static void passTime(int time)
     {
+        //Bukkit.broadcastMessage("here");
+
         for(Cooldown cooldown : CooldownManager.cooldowns)
         {
             if(cooldown.isLocked())
-                return;
+                continue;
 
             if(cooldown.getCurrent() == 0)
-                return;
+                continue;
 
             cooldown.setCurrent(cooldown.getCurrent() - time);
+
+            //Bukkit.broadcastMessage(cooldown.getCurrent()+"");
 
             if(cooldown.getCurrent() < 0)
                 cooldown.setCurrent(0);
@@ -39,9 +44,12 @@ public class CooldownManager {
     public static void start(Cooldown cooldown)
     {
         cooldown.setBypass(false);
+
+        Bukkit.getPluginManager().callEvent(new PrepareCooldownEvent(cooldown));
+
         CooldownManager.reset(cooldown);
 
-        if(!CooldownManager.cooldowns.contains(cooldown))
+        if(!CooldownManager.has(cooldown))
         {
             CooldownManager.cooldowns.add(cooldown);
         }
@@ -55,13 +63,15 @@ public class CooldownManager {
     public static void reset(Cooldown cooldown)
     {
         int reduction = cooldown.getCooldownReduction();
-        if(reduction > (int) RRPGCore.config.get(CooldownReductionCap.class).getProperty())
-            reduction = (int)RRPGCore.config.get(CooldownReductionCap.class).getProperty();
+        if(reduction > Integer.parseInt((String)RRPGCore.config.get(CooldownReductionCap.class).getProperty()))
+            reduction = Integer.parseInt((String)RRPGCore.config.get(CooldownReductionCap.class).getProperty());
 
         cooldown.setCurrent((int)(cooldown.getLength() - ((float)cooldown.getLength() * ((float)reduction / 100f))));
         //Bukkit.broadcastMessage("CDR3:" + this.current);
         if(cooldown.getCurrent() < 0)
             cooldown.setCurrent(0);
+
+        cooldown.setCooldownReduction(0);
     }
 
     public static void skip(Cooldown cooldown)

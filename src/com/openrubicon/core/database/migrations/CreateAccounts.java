@@ -13,8 +13,8 @@ public class CreateAccounts implements DatabaseMigration {
                 " `password` varchar(256) NOT NULL,\n" +
                 " `token` varchar(128) NOT NULL,\n" +
                 " `verified` tinyint(1) NOT NULL DEFAULT '0',\n" +
-                " `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                " `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                 " `deleted_at` datetime DEFAULT NULL,\n" +
                 " `username` varchar(32) NOT NULL,\n" +
                 " `display_name` varchar(16) NOT NULL,\n" +

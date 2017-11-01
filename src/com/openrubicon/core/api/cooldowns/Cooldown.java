@@ -80,9 +80,14 @@ abstract public class Cooldown {
     }
 
     public void setCooldownReduction(int cooldownReduction) {
-        if(cooldownReduction > (int)RRPGCore.config.get(CooldownReductionCap.class).getProperty())
-            cooldownReduction = (int)RRPGCore.config.get(CooldownReductionCap.class).getProperty();
+        if(cooldownReduction > Integer.parseInt((String)RRPGCore.config.get(CooldownReductionCap.class).getProperty()))
+            cooldownReduction = Integer.parseInt((String)RRPGCore.config.get(CooldownReductionCap.class).getProperty());
         this.cooldownReduction = cooldownReduction;
+    }
+
+    public void addCooldownReduction(int cooldownReduction)
+    {
+        this.setCooldownReduction(this.getCooldownReduction() + cooldownReduction);
     }
 
     public boolean isLocked() {

@@ -1,4 +1,4 @@
-package com.openrubicon.core.api.enums;
+package com.openrubicon.core.api.events.enums;
 
 public enum EventType {
     PLAYER_INTERACT,
@@ -13,5 +13,6 @@ public enum EventType {
     PLAYER_STANDING_STILL,
     ENTITY_DEATH,
     ENTITY_DAMAGE,
+    PLAYER_LOOKING_AT_ENTITY,
     PLAYER_INTERACT_ENTITY
 }

@@ -9,5 +9,10 @@ public class Items extends net.milkbowl.vault.item.Items {
         return net.milkbowl.vault.item.Items.itemByType(material).getName();
     }
 
+    public static Material itemMaterialByName(String name)
+    {
+        return net.milkbowl.vault.item.Items.itemByName(name).getType();
+    }
+
 
 }

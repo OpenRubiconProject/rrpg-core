@@ -13,8 +13,8 @@ public class CreateMinecraftPlayers implements DatabaseMigration{
                 " `username` varchar(64) NOT NULL,\n" +
                 " `display_name` varchar(64) NOT NULL,\n" +
                 " `last_joined` datetime DEFAULT NULL,\n" +
-                " `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                " `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                 " `deleted_at` datetime DEFAULT NULL,\n" +
                 " `account_id` int(11) NOT NULL DEFAULT '0',\n" +
                 " PRIMARY KEY (`id`)\n" +

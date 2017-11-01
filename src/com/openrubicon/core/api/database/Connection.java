@@ -32,4 +32,11 @@ public class Connection {
         this.get().createQuery("DROP TABLE IF EXISTS `"+tableName+"`").executeUpdate();
         return true;
     }
+
+
+    public boolean alterTable(String schema)
+    {
+        this.get().createQuery(schema).executeUpdate();
+        return true;
+    }
 }

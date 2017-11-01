@@ -3,6 +3,7 @@ package com.openrubicon.core.events;
 import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.actionbar.ActionBarManager;
 import com.openrubicon.core.api.cooldowns.CooldownManager;
+import com.openrubicon.core.api.scoreboard.ScoreboardManager;
 import com.openrubicon.core.api.server.players.Players;
 import com.openrubicon.core.helpers.PlayerHelpers;
 import com.openrubicon.core.server.playerdata.PreviousLocation;
@@ -70,6 +71,7 @@ public class EventListener implements Listener {
 
         CooldownManager.passTime(5);
         ActionBarManager.process();
+        ScoreboardManager.process();
     }
 
     @EventHandler

@@ -3,11 +3,11 @@ package com.openrubicon.core.api.actionbar;
 import com.openrubicon.core.api.cooldowns.CooldownManager;
 import org.bukkit.entity.Player;
 
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.ArrayDeque;
 
 public class PlayerActionBar {
     private Player player;
-    private LinkedBlockingDeque<ActionBarMessage> messages = new LinkedBlockingDeque<>();
+    private ArrayDeque<ActionBarMessage> messages = new ArrayDeque<>();
     private ActionBarCooldown cooldown;
 
     public PlayerActionBar(Player player) {
@@ -15,7 +15,7 @@ public class PlayerActionBar {
         this.initializeCooldown();
     }
 
-    public PlayerActionBar(Player player, LinkedBlockingDeque<ActionBarMessage> messages) {
+    public PlayerActionBar(Player player, ArrayDeque<ActionBarMessage> messages) {
         this.player = player;
         this.messages = messages;
         this.initializeCooldown();
@@ -35,11 +35,11 @@ public class PlayerActionBar {
         this.player = player;
     }
 
-    public LinkedBlockingDeque<ActionBarMessage> getMessages() {
+    public ArrayDeque<ActionBarMessage> getMessages() {
         return messages;
     }
 
-    public void setMessages(LinkedBlockingDeque<ActionBarMessage> messages) {
+    public void setMessages(ArrayDeque<ActionBarMessage> messages) {
         this.messages = messages;
     }
 
@@ -53,22 +53,12 @@ public class PlayerActionBar {
 
     public void add(ActionBarMessage message)
     {
-        try {
-            this.messages.put(message);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        this.messages.addLast(message);
     }
 
     public ActionBarMessage remove()
     {
-        try {
-            return this.messages.take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return this.messages.remove();
     }
 
     public void addStart(ActionBarMessage message)

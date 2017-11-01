@@ -10,6 +10,7 @@ import com.openrubicon.core.api.discord.DiscordEventTestListener;
 import com.openrubicon.core.api.recipes.RecipeService;
 import com.openrubicon.core.api.recipes.events.RecipeEventListener;
 import com.openrubicon.core.api.reflection.Reflection;
+import com.openrubicon.core.api.scoreboard.ScoreboardSectionService;
 import com.openrubicon.core.api.server.players.Players;
 import com.openrubicon.core.api.server.players.interfaces.PlayerData;
 import com.openrubicon.core.commands.*;
@@ -26,10 +27,7 @@ import com.openrubicon.core.configuration.DevMode;
 import com.openrubicon.core.configuration.DiscordAppToken;
 import com.openrubicon.core.configuration.database.*;
 import com.openrubicon.core.database.models.*;
-import com.openrubicon.core.events.EventListener;
-import com.openrubicon.core.events.FiveMinuteEvent;
-import com.openrubicon.core.events.FiveTickEvent;
-import com.openrubicon.core.events.OneTickEvent;
+import com.openrubicon.core.events.*;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.helpers.MaterialGroups;
@@ -271,6 +269,15 @@ public class RRPGCore extends JavaPlugin implements Module {
             }
         }, 1, 5);
 
+        getLogger().info("Scheduling 1 Second Event");
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                OneSecondEvent event = new OneSecondEvent();
+                Bukkit.getPluginManager().callEvent(event);
+            }
+        }, 1, 20);
+
         getLogger().info("Scheduling Configuration Autosave (5 min)");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
@@ -402,6 +409,7 @@ public class RRPGCore extends JavaPlugin implements Module {
 
         RRPGCore.services.create(new CommandService(this, RRPGCore.modules.getCommands()));
         RRPGCore.services.create(new RecipeService(RRPGCore.modules.getRecipes()));
+        RRPGCore.services.create(new ScoreboardSectionService());
 
         getLogger().info("Established Services.");
     }

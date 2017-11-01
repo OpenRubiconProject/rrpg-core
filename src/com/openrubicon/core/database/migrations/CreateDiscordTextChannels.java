@@ -11,8 +11,8 @@ public class CreateDiscordTextChannels implements DatabaseMigration {
                 " `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
                 " `channel_id` bigint(20) NOT NULL,\n" +
                 " `disabled` tinyint(1) NOT NULL DEFAULT '0',\n" +
-                " `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                " `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                 " `deleted_at` datetime DEFAULT NULL,\n" +
                 " PRIMARY KEY (`id`)\n" +
                 ") ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4");

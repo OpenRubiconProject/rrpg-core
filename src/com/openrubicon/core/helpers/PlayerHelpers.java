@@ -1,5 +1,8 @@
 package com.openrubicon.core.helpers;
 
+import com.openrubicon.core.RRPGCore;
+import com.openrubicon.core.server.playerdata.TopSpeed;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -65,6 +68,11 @@ public class PlayerHelpers {
         }
 
         return target;
+    }
+
+    public static boolean isPlayerFalling(Player player)
+    {
+        return !player.isOnGround() && player.getVelocity().getY() < 0.1;
     }
 
 

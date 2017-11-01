@@ -18,9 +18,10 @@ public final class ActionBarManager {
             if(actionBar.getCooldown().isOnCooldown())
                 continue;
 
-            ActionBarMessage abMessage = actionBar.remove();
-            if(abMessage == null)
+            if(actionBar.getMessages().size() < 1)
                 continue;
+
+            ActionBarMessage abMessage = actionBar.remove();
 
             actionBar.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Helpers.colorize(abMessage.getMessage())));
             actionBar.getCooldown().setLength(abMessage.getCooldownLengthTicks());
@@ -30,13 +31,18 @@ public final class ActionBarManager {
 
     public static void interrupt(Player player, ActionBarMessage message)
     {
-        ActionBarManager.queueMessage(player, message);
 
         ActionBarCooldown cooldown = ActionBarCooldownManager.getActionBar(player);
-        if(cooldown == null)
-            return;
+        if(cooldown != null)
+        {
+            ActionBarCooldownManager.skip(cooldown);
+        }
 
-        ActionBarCooldownManager.skip(cooldown);
+        ActionBarManager.addPlayer(player);
+
+        ActionBarManager.playerActionBars.get(player).addStart(message);
+
+
     }
 
     public static void queueMessage(Player player, ActionBarMessage message)

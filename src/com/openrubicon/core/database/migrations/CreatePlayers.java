@@ -17,9 +17,9 @@ public class CreatePlayers implements DatabaseMigration {
                 " `discord_id` bigint(20) DEFAULT NULL,\n" +
                 " `verified` int(11) NOT NULL DEFAULT '0',\n" +
                 " `token` varchar(16) NOT NULL DEFAULT '',\n" +
-                " `last_joined` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                " `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                " `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `last_joined` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                " `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                 " `deleted_at` datetime DEFAULT NULL,\n" +
                 " PRIMARY KEY (`id`)\n" +
                 ") ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4");
