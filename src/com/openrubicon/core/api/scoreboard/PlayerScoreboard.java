@@ -42,8 +42,12 @@ public class PlayerScoreboard {
         scoreboardContent.add(Constants.PRIMARY_COLOR + Constants.BOLD + "Rubicon");
         scoreboardContent.add(Constants.SECONDARY_COLOR+"/rrpg sb sections");
         scoreboardContent.add(" ");
+
+        String uniqueSpaces = " ";
         for(int i = 0; i < this.getScoreboardSections().size(); i++)
         {
+            uniqueSpaces += " ";
+
             ArrayList<String> content;
 
             if(this.compact)
@@ -54,11 +58,11 @@ public class PlayerScoreboard {
             if(content.size() > 0)
             {
                 scoreboardContent.add(Constants.HEADING_COLOR + Constants.BOLD + this.getScoreboardSections().get(i).getTitle());
-                scoreboardContent.add(Constants.RESET_FORMAT+"=====");
+                scoreboardContent.add(Constants.RESET_FORMAT+"====="+uniqueSpaces);
                 scoreboardContent.addAll(content);
 
                 if(i != this.getScoreboardSections().size() - 1)
-                    scoreboardContent.add(" ");
+                    scoreboardContent.add(uniqueSpaces);
             }
 
         }
