@@ -75,5 +75,10 @@ public class PlayerHelpers {
         return !player.isOnGround() && player.getVelocity().getY() < 0.1;
     }
 
+    public static void trueDamage(LivingEntity livingEntity, double damage)
+    {
+        livingEntity.setHealth(livingEntity.getHealth() - damage);
+    }
+
 
 }

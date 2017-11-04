@@ -1,6 +1,8 @@
 package com.openrubicon.core.api.nbt;
 
 import com.openrubicon.core.api.interfaces.Persistable;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +67,7 @@ public class Properties implements Persistable {
     @Override
     public boolean load()
     {
+        //Bukkit.broadcastMessage(this.persistenceString);
         String[] arr = this.persistenceString.split(",");
 
         for(int i = 0; i < arr.length; i++)
