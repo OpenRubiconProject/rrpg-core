@@ -1,18 +1,18 @@
-package com.openrubicon.core.commands;
+package com.openrubicon.core.commands.config;
 
 import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.command.Command;
-import com.openrubicon.core.api.configuration.ConfigurationProperty;
+import com.openrubicon.core.api.configuration.Configuration;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
 
 import java.util.ArrayList;
 
-public class ConfigSet extends Command {
+public class ConfigLoad extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "config set $ $";
+        return "config load";
     }
 
     @Override
@@ -20,24 +20,17 @@ public class ConfigSet extends Command {
         ArrayList<InteractableType> senders = new ArrayList<>();
         senders.add(InteractableType.CONSOLE);
         senders.add(InteractableType.PLAYER);
-        senders.add(InteractableType.DISCORD);
         return senders;
     }
 
     @Override
-    public void handle(Interactable sender, String[] args)
-    {
-        ConfigurationProperty property = RRPGCore.config.get(args[0]);
+    public void handle(Interactable sender, String[] args) {
 
-        if(property == null)
-        {
-            sender.sendMessage("This configuration property does not exist.");
-            return;
-        }
+        RRPGCore.plugin.reloadConfig();
+        RRPGCore.config = new Configuration(RRPGCore.plugin.getConfig());
+        RRPGCore.config.add(RRPGCore.modules.getConfigurationProperties());
+        RRPGCore.config.load();
 
-
-        property.setProperty(args[1]);
-
-        sender.sendMessage(property.getObservation());
+        sender.sendMessage("Configuration file was reloaded.");
     }
 }

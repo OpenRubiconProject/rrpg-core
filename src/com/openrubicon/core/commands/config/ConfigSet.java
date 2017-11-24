@@ -1,18 +1,19 @@
-package com.openrubicon.core.commands;
+package com.openrubicon.core.commands.config;
 
 import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.configuration.ConfigurationProperty;
-import com.openrubicon.core.api.interactables.interfaces.Interactable;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
+import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.helpers.Constants;
 
 import java.util.ArrayList;
 
-public class ConfigGet extends Command {
+public class ConfigSet extends Command {
 
     @Override
     public String getCommandFormat() {
-        return "config get $";
+        return "config set $ $";
     }
 
     @Override
@@ -35,6 +36,9 @@ public class ConfigGet extends Command {
             return;
         }
 
-        sender.sendMessage(property.getObservation());
+
+        property.setProperty(args[1]);
+
+        sender.sendMessage(Constants.HEADING_COLOR + "Set: " + property.getObservation().get(0));
     }
 }

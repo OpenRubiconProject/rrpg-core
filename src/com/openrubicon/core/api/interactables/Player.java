@@ -3,6 +3,7 @@ package com.openrubicon.core.api.interactables;
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.helpers.Helpers;
 
 public class Player implements Interactable {
 
@@ -14,7 +15,7 @@ public class Player implements Interactable {
 
     @Override
     public void sendMessage(String message) {
-        player.sendMessage(message);
+        player.sendMessage(Helpers.colorize(message));
     }
 
     @Override

@@ -8,9 +8,6 @@ import java.util.LinkedList;
 
 public class Configuration implements Persistable {
 
-    /**  */
-
-
     private LinkedHashMap<String, ConfigurationProperty> properties = new LinkedHashMap<>();
     public FileConfiguration config;
 
@@ -37,7 +34,14 @@ public class Configuration implements Persistable {
     {
         for(ConfigurationProperty property : this.properties.values())
         {
-            property.setProperty(this.config.get(property.getKey(), property.getDefaultValue()));
+            if(!this.config.contains(property.getKey()))
+                this.config.set(property.getKey(), property.getDefaultValue());
+
+            String data = this.config.getString(property.getKey());
+
+            property.setProperty(data);
+
+            //property.setProperty(this.config.get(property.getKey(), property.getDefaultValue()));
         }
 
         return true;

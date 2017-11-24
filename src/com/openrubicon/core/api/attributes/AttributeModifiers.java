@@ -7,6 +7,8 @@ import com.openrubicon.core.helpers.Helpers;
 import com.openrubicon.core.api.interfaces.Observeable;
 import de.tr7zw.itemnbtapi.NBTList;
 import de.tr7zw.itemnbtapi.NBTListCompound;
+import de.tr7zw.itemnbtapi.NBTType;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -64,7 +66,9 @@ public class AttributeModifiers implements Observeable {
 
     public boolean save(NBT i)
     {
-        NBTList attributes = i.getList("AttributeModifiers");
+        //this.removeAll(i);
+
+        NBTList attributes = i.getList("AttributeModifiers", NBTType.NBTTagCompound);
 
         for(AttributeModifier attribute : this.modifiers.values())
         {
@@ -85,21 +89,18 @@ public class AttributeModifiers implements Observeable {
 
     public boolean removeAll(NBT i)
     {
-        NBTList attributes = i.getList("AttributeModifiers");
+        NBTList attributes = i.getList("AttributeModifiers", NBTType.NBTTagCompound);
         int size = attributes.size();
-
         if(size == 0 || size == -1)
             return true;
 
         for(int z = 0; z < size; z++)
         {
-            try
-            {
-                if(attributes.getCompound(z) != null)
-                    attributes.remove(z);
-            } catch (Exception e) {
-                continue;
-            }
+            NBTListCompound modifier = attributes.getCompound(z);
+            //modifier.
+            //attributes.
+            //AttributeModifierType name = AttributeModifierType.fromString(modifier.getString("AttributeName"));
+            //Bukkit.broadcastMessage(name.toString());
         }
 
         return true;

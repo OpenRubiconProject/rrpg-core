@@ -21,6 +21,10 @@ import com.openrubicon.core.api.connector.ConnectorServer;
 import com.openrubicon.core.api.database.Database;
 import com.openrubicon.core.api.database.DatabaseMigrator;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
+import com.openrubicon.core.commands.config.ConfigGet;
+import com.openrubicon.core.commands.config.ConfigLoad;
+import com.openrubicon.core.commands.config.ConfigSave;
+import com.openrubicon.core.commands.config.ConfigSet;
 import com.openrubicon.core.configuration.ConnectorPort;
 import com.openrubicon.core.configuration.CooldownReductionCap;
 import com.openrubicon.core.configuration.DevMode;
@@ -123,6 +127,8 @@ public class RRPGCore extends JavaPlugin implements Module {
         commands.add(new ConnectorRestart());
         commands.add(new ConfigGet());
         commands.add(new ConfigSet());
+        commands.add(new ConfigSave());
+        commands.add(new ConfigLoad());
         commands.add(new RRPG());
         commands.add(new Register());
         commands.add(new Login());
@@ -218,6 +224,11 @@ public class RRPGCore extends JavaPlugin implements Module {
         RRPGCore.config.add(RRPGCore.modules.getConfigurationProperties());
         RRPGCore.config.load();
         getLogger().info("Configuration loaded.");
+
+        getLogger().info("Saving any Configuration Changes..");
+        RRPGCore.config.save();
+        saveConfig();
+        getLogger().info("Configuration saved.");
 
         this.loadDatabase();
 

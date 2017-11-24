@@ -63,8 +63,8 @@ public class CooldownManager {
     public static void reset(Cooldown cooldown)
     {
         int reduction = cooldown.getCooldownReduction();
-        if(reduction > Integer.parseInt((String)RRPGCore.config.get(CooldownReductionCap.class).getProperty()))
-            reduction = Integer.parseInt((String)RRPGCore.config.get(CooldownReductionCap.class).getProperty());
+        if(reduction > RRPGCore.config.get(CooldownReductionCap.class).getInt())
+            reduction = RRPGCore.config.get(CooldownReductionCap.class).getInt();
 
         cooldown.setCurrent((int)(cooldown.getLength() - ((float)cooldown.getLength() * ((float)reduction / 100f))));
         //Bukkit.broadcastMessage("CDR3:" + this.current);

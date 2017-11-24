@@ -80,8 +80,8 @@ abstract public class Cooldown {
     }
 
     public void setCooldownReduction(int cooldownReduction) {
-        if(cooldownReduction > Integer.parseInt((String)RRPGCore.config.get(CooldownReductionCap.class).getProperty()))
-            cooldownReduction = Integer.parseInt((String)RRPGCore.config.get(CooldownReductionCap.class).getProperty());
+        if(cooldownReduction > RRPGCore.config.get(CooldownReductionCap.class).getInt())
+            cooldownReduction = RRPGCore.config.get(CooldownReductionCap.class).getInt();
         this.cooldownReduction = cooldownReduction;
     }
 

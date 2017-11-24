@@ -80,7 +80,7 @@ abstract public class Command {
 
         if(args.length != this.argsCount)
         {
-            sender.sendMessage("Incompatible arguments. Please check the syntax of this command and try again.");
+            //sender.sendMessage("Incompatible arguments. Please check the syntax of this command and try again.");
             return false;
         }
 
