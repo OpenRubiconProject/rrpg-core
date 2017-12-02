@@ -139,4 +139,31 @@ public class Helpers {
         double total = Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2);
         return Math.sqrt(total);
     }
+
+    public static double clamp(double input, double lowerBound, double upperBound)
+    {
+        if(input < lowerBound)
+            return lowerBound;
+
+        if(input > upperBound)
+            return upperBound;
+
+        return input;
+    }
+
+    public static double clampLowerBound(double input, double lowerBound)
+    {
+        if(input < lowerBound)
+            return lowerBound;
+
+        return input;
+    }
+
+    public static double clampUpperBound(double input, double upperBound)
+    {
+        if(input > upperBound)
+            return upperBound;
+
+        return input;
+    }
 }

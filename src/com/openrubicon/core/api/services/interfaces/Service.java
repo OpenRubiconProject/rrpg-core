@@ -1,4 +1,6 @@
 package com.openrubicon.core.api.services.interfaces;
 
-public interface Service {
+import com.openrubicon.core.api.interfaces.Observeable;
+
+public interface Service extends Observeable {
 }

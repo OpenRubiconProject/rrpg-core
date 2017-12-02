@@ -17,4 +17,14 @@ public class RecipeService implements Service {
         return recipes;
     }
 
+    @Override
+    public ArrayList<String> getObservation() {
+        ArrayList<String> observation = new ArrayList<>();
+        for(Recipe recipe : this.getRecipes())
+        {
+            observation.add(recipe.getClass().getSimpleName());
+        }
+        return observation;
+    }
+
 }

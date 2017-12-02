@@ -5,6 +5,7 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.utility.DynamicPrimitive;
 import com.openrubicon.core.helpers.Constants;
 
 import java.util.ArrayList;
@@ -26,9 +27,9 @@ public class ConfigSet extends Command {
     }
 
     @Override
-    public void handle(Interactable sender, String[] args)
+    public void handle(Interactable sender, ArrayList<DynamicPrimitive> args)
     {
-        ConfigurationProperty property = RRPGCore.config.get(args[0]);
+        ConfigurationProperty property = RRPGCore.config.get(args.get(0).getString());
 
         if(property == null)
         {
@@ -37,8 +38,11 @@ public class ConfigSet extends Command {
         }
 
 
-        property.setProperty(args[1]);
+        property.setProperty(args.get(1).getString());
 
         sender.sendMessage(Constants.HEADING_COLOR + "Set: " + property.getObservation().get(0));
+
+        if(!property.isSaved())
+            sender.sendMessage(Constants.YELLOW + "This update will not be replicated to the config file. Update the config file manually to make a permanent change.");
     }
 }

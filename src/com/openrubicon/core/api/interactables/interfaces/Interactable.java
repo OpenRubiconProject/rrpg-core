@@ -2,6 +2,7 @@ package com.openrubicon.core.api.interactables.interfaces;
 
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
+import com.openrubicon.core.api.permission.interfaces.PermissionNode;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,9 @@ public interface Interactable {
     InteractableType getInteractableType();
     InteractableSenderVisibility getInteractableSenderVisibility();
     String getId();
+
+    boolean isAllowed(PermissionNode permissionNode);
+
     default void senderTypeError()
     {
         sendMessage("This type of client doesn't support this command.");

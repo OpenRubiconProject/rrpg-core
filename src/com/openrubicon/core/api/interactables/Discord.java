@@ -3,6 +3,7 @@ package com.openrubicon.core.api.interactables;
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.permission.interfaces.PermissionNode;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 
@@ -51,5 +52,10 @@ public class Discord implements Interactable {
     @Override
     public String getId() {
         return this.author.getId();
+    }
+
+    @Override
+    public boolean isAllowed(PermissionNode permissionNode) {
+        return false;
     }
 }

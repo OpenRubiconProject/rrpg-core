@@ -11,16 +11,16 @@ import java.util.Arrays;
 
 public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
-    private String command = "rrpg";
+    public static final String commandPrefix = "rrpg";
 
     public CommandExecutor(JavaPlugin plugin) {
-        plugin.getCommand(command).setExecutor(this);
+        plugin.getCommand(commandPrefix).setExecutor(this);
     }
 
     public final boolean onCommand(Interactable sender, String command)
     {
         String[] parts = command.split(" ");
-        if(!parts[0].equals(this.command))
+        if(!parts[0].equals(commandPrefix))
             return false;
 
         String[] arguments = {};
@@ -33,7 +33,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
 
     public final boolean onCommand(Interactable sender, String command, String[] args)
     {
-        if(!command.equals(this.command))
+        if(!command.equals(commandPrefix))
             return false;
 
         String commandLabel = "";

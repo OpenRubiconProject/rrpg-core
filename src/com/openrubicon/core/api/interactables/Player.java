@@ -3,6 +3,8 @@ package com.openrubicon.core.api.interactables;
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
 import com.openrubicon.core.api.interactables.interfaces.Interactable;
+import com.openrubicon.core.api.permission.Permission;
+import com.openrubicon.core.api.permission.interfaces.PermissionNode;
 import com.openrubicon.core.helpers.Helpers;
 
 public class Player implements Interactable {
@@ -35,5 +37,10 @@ public class Player implements Interactable {
     @Override
     public String getId() {
         return this.player.getUniqueId().toString();
+    }
+
+    @Override
+    public boolean isAllowed(PermissionNode permissionNode) {
+        return Permission.has(player, permissionNode);
     }
 }

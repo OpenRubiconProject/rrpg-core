@@ -4,7 +4,9 @@ import com.openrubicon.core.api.command.Command;
 import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.DatabaseModel;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
+import com.openrubicon.core.api.permission.interfaces.PermissionNode;
 import com.openrubicon.core.api.recipes.interfaces.Recipe;
+import com.openrubicon.core.api.scoreboard.interfaces.ScoreboardSection;
 import com.openrubicon.core.api.server.players.interfaces.PlayerData;
 import com.openrubicon.core.interfaces.Module;
 import org.bukkit.Bukkit;
@@ -125,5 +127,25 @@ public class ModuleManager {
             recipes.addAll(((Module)module).getRecipes());
         }
         return recipes;
+    }
+
+    public ArrayList<ScoreboardSection> getScoreboardSections()
+    {
+        ArrayList<ScoreboardSection> scoreboardSections = new ArrayList<>();
+        for(JavaPlugin module : this.getModules().values())
+        {
+            scoreboardSections.addAll(((Module)module).getScoreboardSections());
+        }
+        return scoreboardSections;
+    }
+
+    public ArrayList<PermissionNode> getPermissionNodes()
+    {
+        ArrayList<PermissionNode> permissionNodes = new ArrayList<>();
+        for(JavaPlugin module : this.getModules().values())
+        {
+            permissionNodes.addAll(((Module)module).getPermissionNodes());
+        }
+        return permissionNodes;
     }
 }

@@ -7,12 +7,14 @@ import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
+import com.openrubicon.core.api.permission.PermissionNodeService;
 import com.openrubicon.core.api.recipes.RecipeService;
 import com.openrubicon.core.api.recipes.events.RecipeEventListener;
 import com.openrubicon.core.api.reflection.Reflection;
 import com.openrubicon.core.api.scoreboard.ScoreboardSectionService;
 import com.openrubicon.core.api.server.players.Players;
 import com.openrubicon.core.api.server.players.interfaces.PlayerData;
+import com.openrubicon.core.api.services.interfaces.Service;
 import com.openrubicon.core.commands.*;
 import com.openrubicon.core.commands.account.Link;
 import com.openrubicon.core.commands.account.Login;
@@ -25,6 +27,8 @@ import com.openrubicon.core.commands.config.ConfigGet;
 import com.openrubicon.core.commands.config.ConfigLoad;
 import com.openrubicon.core.commands.config.ConfigSave;
 import com.openrubicon.core.commands.config.ConfigSet;
+import com.openrubicon.core.commands.tests.TestCheckbox;
+import com.openrubicon.core.commands.tests.TestCommand;
 import com.openrubicon.core.configuration.ConnectorPort;
 import com.openrubicon.core.configuration.CooldownReductionCap;
 import com.openrubicon.core.configuration.DevMode;
@@ -134,6 +138,7 @@ public class RRPGCore extends JavaPlugin implements Module {
         commands.add(new Login());
         commands.add(new Link());
         commands.add(new TestCommand());
+        commands.add(new TestCheckbox());
         return commands;
     }
 
@@ -234,9 +239,9 @@ public class RRPGCore extends JavaPlugin implements Module {
 
         RRPGCore.players = new Players();
 
-        this.loadConnector((int)config.get(ConnectorPort.class).getProperty());
+        this.loadConnector(config.get(ConnectorPort.class).getInt());
 
-        this.loadDiscord((String)config.get(DiscordAppToken.class).getProperty());
+        this.loadDiscord(config.get(DiscordAppToken.class).getString());
 
         this.loadServices();
 
@@ -261,6 +266,27 @@ public class RRPGCore extends JavaPlugin implements Module {
 
         this.setupChat();
         getLogger().info("Established Chat");
+
+        getLogger().info("Finished Manual load");
+
+        if(RRPGCore.config.get(DevMode.class).getBoolean())
+        {
+            getLogger().info(" ");
+            getLogger().info("===== DUMPING SERVICE INFORMATION =====");
+            for(Service service : services.getServices())
+            {
+                getLogger().info("  === " + service.getClass().getSimpleName() + " ===");
+                for(String line : service.getObservation())
+                    getLogger().info("    " + line);
+                getLogger().info(" ");
+            }
+            getLogger().info(" ");
+        }
+
+        // DONE MANUAL LOADING
+        // SETUP THREADS BELOW
+
+        getLogger().info("Establishing ASYNC loading..");
 
         getLogger().info("Scheduling 1 Tick Event");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
@@ -420,7 +446,8 @@ public class RRPGCore extends JavaPlugin implements Module {
 
         RRPGCore.services.create(new CommandService(this, RRPGCore.modules.getCommands()));
         RRPGCore.services.create(new RecipeService(RRPGCore.modules.getRecipes()));
-        RRPGCore.services.create(new ScoreboardSectionService());
+        RRPGCore.services.create(new ScoreboardSectionService(RRPGCore.modules.getScoreboardSections()));
+        RRPGCore.services.create(new PermissionNodeService(RRPGCore.modules.getPermissionNodes()));
 
         getLogger().info("Established Services.");
     }

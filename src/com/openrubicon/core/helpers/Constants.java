@@ -1,6 +1,8 @@
 package com.openrubicon.core.helpers;
 
 public class Constants {
+    public static final char COLOR_CODE = '&';
+
     public static final String PRIMARY_COLOR = "&2";
     public static final String SECONDARY_COLOR = "&a";
     public static final String TERTIARY_COLOR = "&b";

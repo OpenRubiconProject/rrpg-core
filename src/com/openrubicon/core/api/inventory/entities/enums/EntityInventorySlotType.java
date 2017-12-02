@@ -38,6 +38,6 @@ public enum EntityInventorySlotType implements InventorySlotType {
             }
         }
 
-        return EntityInventorySlotType.MAINHAND;
+        return null;
     }
 }

@@ -28,4 +28,14 @@ public class CommandService implements Service {
     {
         this.commands.add(command);
     }
+
+    @Override
+    public ArrayList<String> getObservation() {
+        ArrayList<String> observation = new ArrayList<>();
+        for(Command command : this.getCommands())
+        {
+            observation.add(command.getCommandFormat());
+        }
+        return observation;
+    }
 }

@@ -1,13 +1,12 @@
 package com.openrubicon.core.api.configuration;
 
-import com.openrubicon.core.api.interfaces.Observeable;
+import com.openrubicon.core.api.utility.DynamicPrimitive;
 import com.openrubicon.core.helpers.Constants;
 
 import java.util.ArrayList;
 
-abstract public class ConfigurationProperty<T> implements Observeable {
+abstract public class ConfigurationProperty<T> extends DynamicPrimitive<T> {
 
-    private T property;
     private T defaultValue;
 
     private String key;
@@ -16,16 +15,6 @@ abstract public class ConfigurationProperty<T> implements Observeable {
 
     private boolean observable = true;
     private boolean editable = true;
-
-    // These are for primitive returns
-    int rint;
-    float rfloat;
-    double rdouble;
-    long rlong;
-    char rchar;
-    byte rbyte;
-    short rshort;
-    boolean rboolean;
 
     public ConfigurationProperty(String key, T defaultValue) {
         this.defaultValue = defaultValue;
@@ -38,17 +27,14 @@ abstract public class ConfigurationProperty<T> implements Observeable {
         this.saved = saved;
     }
 
-    public T getProperty() {
-        return property;
-    }
-
+    @Override
     public void setProperty(String property) {
-        if(this.property != null && (!editable || !observable))
+        if(this.getProperty() != null && (!editable || !observable))
             return;
 
         if(property == null)
         {
-            this.property = this.defaultValue;
+            this.changeProperty(this.defaultValue);
         }
         else
         {
@@ -74,88 +60,6 @@ abstract public class ConfigurationProperty<T> implements Observeable {
 
         this.setPrim();
     }
-
-    private void changeProperty(T prop)
-    {
-        this.property = prop;
-    }
-
-    public void setPrim()
-    {
-        if(property == null)
-        {
-            rint = 0;
-            rbyte = (byte)rint;
-            rdouble = rint;
-            rfloat = rint;
-            rlong = rint;
-            rshort = (short)rint;
-            rchar = (char)rint;
-
-        }
-
-        else if(property instanceof Number)
-        {
-            Number propertyNumber = (Number)property;
-            rint = propertyNumber.intValue();
-            rbyte = propertyNumber.byteValue();
-            rdouble = propertyNumber.doubleValue();
-            rfloat = propertyNumber.floatValue();
-            rlong = propertyNumber.longValue();
-            rshort = propertyNumber.shortValue();
-            rchar = (char)rint;
-        }
-
-        else if(property instanceof Character)
-        {
-            rchar = ((Character)property).charValue();
-            rint = Character.getNumericValue(rchar);
-            rbyte = (byte)rint;
-            rdouble = rint;
-            rfloat = rint;
-            rlong = rint;
-            rshort = (short)rint;
-        }
-
-        else if(property instanceof Boolean)
-        {
-            rboolean = ((Boolean)property).booleanValue();
-            if(rboolean)
-                rint = 1;
-            else
-                rint = 0;
-            rbyte = (byte)rint;
-            rdouble = rint;
-            rfloat = rint;
-            rlong = rint;
-            rshort = (short)rint;
-            rchar = (char)rint;
-        }
-
-        if(rint == 0 || this.property == null)
-            rboolean = false;
-        else
-            rboolean = true;
-    }
-
-    public boolean getBoolean()
-    {
-        return rboolean;
-    }
-
-    public int getInt() { return rint; }
-
-    public short getShort() { return rshort; }
-
-    public long getLong() { return rlong; }
-
-    public float getFloat() { return rfloat; }
-
-    public double getDouble() { return rdouble; }
-
-    public char getChar() { return rchar; }
-
-    public byte getByte() { return rbyte; }
 
 
     public T getDefaultValue() {

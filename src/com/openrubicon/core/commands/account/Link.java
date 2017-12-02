@@ -7,6 +7,7 @@ import com.openrubicon.core.api.interactables.interfaces.Interactable;
 import com.openrubicon.core.api.interactables.Player;
 import com.openrubicon.core.api.interactables.enums.InteractableSenderVisibility;
 import com.openrubicon.core.api.interactables.enums.InteractableType;
+import com.openrubicon.core.api.utility.DynamicPrimitive;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,12 +32,12 @@ public class Link extends Command {
     }
 
     @Override
-    public void handle(Interactable sender, String[] args) {
+    public void handle(Interactable sender, ArrayList<DynamicPrimitive> args) {
         AccountManagement accountManagement = new AccountManagement();
 
         if(sender.getInteractableType() == InteractableType.PLAYER)
         {
-            if(accountManagement.linkMinecraft(args[0], args[1], sender.getId()))
+            if(accountManagement.linkMinecraft(args.get(0).getString(), args.get(1).getString(), sender.getId()))
                 sender.sendMessage("Linked successfully");
             else
                 sender.sendMessage("Linking failed");
@@ -44,7 +45,7 @@ public class Link extends Command {
 
         if(sender.getInteractableType() == InteractableType.DISCORD)
         {
-            if(accountManagement.linkDiscord(args[0], args[1], sender.getId()))
+            if(accountManagement.linkDiscord(args.get(0).getString(), args.get(1).getString(), sender.getId()))
                 sender.sendMessage("Linked successfully");
             else
                 sender.sendMessage("Linking failed");
