@@ -7,6 +7,7 @@ import com.openrubicon.core.api.configuration.ConfigurationProperty;
 import com.openrubicon.core.api.database.interfaces.PostDatabaseLoad;
 import com.openrubicon.core.api.discord.Discord;
 import com.openrubicon.core.api.discord.DiscordEventTestListener;
+import com.openrubicon.core.api.menu.events.InventoryListener;
 import com.openrubicon.core.api.permission.PermissionNodeService;
 import com.openrubicon.core.api.recipes.RecipeService;
 import com.openrubicon.core.api.recipes.events.RecipeEventListener;
@@ -27,6 +28,8 @@ import com.openrubicon.core.commands.config.ConfigGet;
 import com.openrubicon.core.commands.config.ConfigLoad;
 import com.openrubicon.core.commands.config.ConfigSave;
 import com.openrubicon.core.commands.config.ConfigSet;
+import com.openrubicon.core.commands.scoreboard.Scoreboard;
+import com.openrubicon.core.commands.scoreboard.ScoreboardSectionToggle;
 import com.openrubicon.core.commands.tests.TestCheckbox;
 import com.openrubicon.core.commands.tests.TestCommand;
 import com.openrubicon.core.configuration.ConnectorPort;
@@ -44,6 +47,7 @@ import com.openrubicon.core.interfaces.Module;
 import com.openrubicon.core.api.services.ServiceManager;
 import com.openrubicon.core.server.playerdata.MinecraftPlayerModel;
 import com.openrubicon.core.server.playerdata.PreviousLocation;
+import com.openrubicon.core.server.playerdata.ScoreboardSections;
 import com.openrubicon.core.server.playerdata.TopSpeed;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.milkbowl.vault.chat.Chat;
@@ -139,6 +143,9 @@ public class RRPGCore extends JavaPlugin implements Module {
         commands.add(new Link());
         commands.add(new TestCommand());
         commands.add(new TestCheckbox());
+        commands.add(new Scoreboard());
+        commands.add(new com.openrubicon.core.commands.scoreboard.ScoreboardSections());
+        commands.add(new ScoreboardSectionToggle());
         return commands;
     }
 
@@ -171,6 +178,7 @@ public class RRPGCore extends JavaPlugin implements Module {
         playerDatas.add(new MinecraftPlayerModel());
         playerDatas.add(new PreviousLocation());
         playerDatas.add(new TopSpeed());
+        playerDatas.add(new ScoreboardSections());
         return playerDatas;
     }
 
@@ -250,6 +258,9 @@ public class RRPGCore extends JavaPlugin implements Module {
 
         getServer().getPluginManager().registerEvents(new RecipeEventListener(), this);
         getLogger().info("Established Recipe Event Handler.");
+
+        getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+        getLogger().info("Established Menu Event Handler.");
 
         if (!Bukkit.getPluginManager().isPluginEnabled("Vault"))
         {

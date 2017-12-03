@@ -1,4 +1,4 @@
-package com.openrubicon.core.api.menu.chat.interfaces;
+package com.openrubicon.core.api.chat.interfaces;
 
 import com.openrubicon.core.helpers.Constants;
 import net.md_5.bungee.api.ChatColor;

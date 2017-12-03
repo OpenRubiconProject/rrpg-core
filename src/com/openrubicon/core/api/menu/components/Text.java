@@ -16,4 +16,9 @@ public class Text extends Component<Text> {
         this.text = text;
         return this;
     }
+
+    @Override
+    public Text initEventParameters() {
+        return this;
+    }
 }

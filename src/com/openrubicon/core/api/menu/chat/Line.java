@@ -1,6 +1,7 @@
 package com.openrubicon.core.api.menu.chat;
 
-import com.openrubicon.core.api.menu.chat.interfaces.Colors;
+import com.openrubicon.core.api.chat.interfaces.Colors;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 
 public class Line implements Colors {
@@ -23,9 +24,9 @@ public class Line implements Colors {
         return interfaceLine;
     }
 
-    public static BaseComponent[] blank()
+    public static Line blank()
     {
-        return new ComponentBuilder("").create();
+        return new Line();
     }
 
     public Line addLegacyText(String legacyText)
@@ -55,6 +56,12 @@ public class Line implements Colors {
     public Line event(HoverEvent hoverEvent)
     {
         this.interfaceLine.event(hoverEvent);
+        return this;
+    }
+
+    public Line useColor(ChatColor color)
+    {
+        this.interfaceLine.color(color);
         return this;
     }
 

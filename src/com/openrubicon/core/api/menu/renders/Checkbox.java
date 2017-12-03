@@ -1,39 +1,22 @@
 package com.openrubicon.core.api.menu.renders;
 
-import com.openrubicon.core.api.menu.components.Component;
-import com.openrubicon.core.api.menu.defaults.format.CheckboxFormat;
 import com.openrubicon.core.api.menu.defaults.render.CheckboxRender;
-import com.openrubicon.core.api.menu.interfaces.Format;
-import com.openrubicon.core.api.menu.interfaces.Render;
 
-abstract public class Checkbox implements Render {
-
-    private com.openrubicon.core.api.menu.formats.Checkbox format;
-    private com.openrubicon.core.api.menu.components.Checkbox component;
+abstract public class Checkbox extends Render {
 
     @Override
-    public Format getFormat() {
-        return format;
+    public com.openrubicon.core.api.menu.formats.Checkbox getFormat() {
+        return (com.openrubicon.core.api.menu.formats.Checkbox)super.getFormat();
     }
 
     @Override
-    public Component<com.openrubicon.core.api.menu.components.Checkbox> getComponent() {
-        return component;
-    }
-
-    @Override
-    public void setFormat(Format format) {
-        this.format = (CheckboxFormat)format;
-    }
-
-    @Override
-    public void setComponent(Component component) {
-        this.setComponent();
-
+    public com.openrubicon.core.api.menu.components.Checkbox getComponent() {
+        return (com.openrubicon.core.api.menu.components.Checkbox)super.getComponent();
     }
 
     @Override
     public Render getDefault() {
         return new CheckboxRender();
     }
+
 }

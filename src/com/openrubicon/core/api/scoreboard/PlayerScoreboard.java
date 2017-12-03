@@ -1,8 +1,10 @@
 package com.openrubicon.core.api.scoreboard;
 
+import com.openrubicon.core.RRPGCore;
 import com.openrubicon.core.api.scoreboard.interfaces.ScoreboardSection;
 import com.openrubicon.core.helpers.Constants;
 import com.openrubicon.core.helpers.Helpers;
+import com.openrubicon.core.server.playerdata.ScoreboardSections;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -40,12 +42,15 @@ public class PlayerScoreboard {
     {
         ArrayList<String> scoreboardContent = new ArrayList<>();
         scoreboardContent.add(Constants.PRIMARY_COLOR + Constants.BOLD + "Rubicon");
-        scoreboardContent.add(Constants.SECONDARY_COLOR+"/rrpg sb sections");
+        scoreboardContent.add(Constants.SECONDARY_COLOR+"/rrpg sb");
         scoreboardContent.add(" ");
 
         String uniqueSpaces = " ";
         for(int i = 0; i < this.getScoreboardSections().size(); i++)
         {
+            if(!RRPGCore.players.getPlayerData(this.getPlayer(), ScoreboardSections.class).getSections().get(this.getScoreboardSections().get(i)))
+                continue;
+
             uniqueSpaces += " ";
 
             ArrayList<String> content;

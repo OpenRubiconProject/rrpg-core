@@ -12,6 +12,8 @@ abstract public class Checkbox implements Format {
     abstract public ItemStack getYesItem();
     abstract public ItemStack getNoItem();
 
+
+
     @Override
     public Format getDefault() {
         return new CheckboxFormat();

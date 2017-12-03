@@ -46,4 +46,10 @@ public class Slider extends Component<Slider> {
         this.granularity = granularity;
         return this;
     }
+
+    @Override
+    public Slider initEventParameters() {
+        this.getEvent().setParameters(String.valueOf(this.getValue()));
+        return this;
+    }
 }

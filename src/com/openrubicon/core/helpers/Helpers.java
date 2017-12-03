@@ -50,12 +50,27 @@ public class Helpers {
         return ChatColor.translateAlternateColorCodes('&',message);
     }
 
+    public static String colorize(String message, char code)
+    {
+        return ChatColor.translateAlternateColorCodes(code,message);
+    }
+
     public static ArrayList<String> colorize(ArrayList<String> messages)
     {
         ArrayList<String> coloredMessages = new ArrayList<>();
         for(String s : messages)
         {
             coloredMessages.add(Helpers.colorize(s));
+        }
+        return coloredMessages;
+    }
+
+    public static ArrayList<String> colorize(ArrayList<String> messages, char code)
+    {
+        ArrayList<String> coloredMessages = new ArrayList<>();
+        for(String s : messages)
+        {
+            coloredMessages.add(Helpers.colorize(s, code));
         }
         return coloredMessages;
     }

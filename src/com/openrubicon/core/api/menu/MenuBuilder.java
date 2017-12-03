@@ -1,24 +1,34 @@
 package com.openrubicon.core.api.menu;
 
+import com.openrubicon.core.api.menu.enums.MenuType;
 import com.openrubicon.core.api.menu.interfaces.MenuFormat;
 import com.openrubicon.core.api.menu.interfaces.MenuRender;
 import com.openrubicon.core.api.menu.interfaces.MenuTemplate;
-import com.openrubicon.core.api.menu.interfaces.markers.Support;
 import com.openrubicon.core.api.menu.type.Inventory;
+import com.openrubicon.core.api.menu.type.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MenuBuilder {
 
-    private ArrayList<Player> views = new ArrayList<>();
+    private ArrayList<Player> viewers = new ArrayList<>();
     private MenuTemplate menuTemplate;
+    private MenuType menuType;
     private MenuFormat menuFormat = new com.openrubicon.core.api.menu.defaults.MenuFormat();
     private MenuRender menuRender = new com.openrubicon.core.api.menu.defaults.MenuRender();
-    private Support menuType = new Inventory();
 
-    public MenuBuilder(MenuTemplate menuTemplate) {
+    public MenuBuilder(MenuTemplate menuTemplate, MenuType menuType) {
         this.menuTemplate = menuTemplate;
+        this.menuType = menuType;
+    }
+
+    public MenuBuilder withTemplate(MenuTemplate menuTemplate)
+    {
+        this.menuTemplate = menuTemplate;
+        return this;
     }
 
     public MenuBuilder withFormat(MenuFormat menuFormat)
@@ -33,20 +43,47 @@ public class MenuBuilder {
         return this;
     }
 
-    public MenuBuilder useType(Support menuType)
+    public MenuBuilder useType(MenuType menuType)
     {
         this.menuType = menuType;
         return this;
     }
 
-    public void draw()
+    public MenuBuilder withViewers(ArrayList<Player> player)
     {
-
+        this.viewers.addAll(player);
+        return this;
     }
 
-    public void redraw()
+    public MenuBuilder withViewers(Player... player)
     {
+        this.viewers.addAll(Arrays.asList(player));
+        return this;
+    }
 
+    public MenuBuilder withViewer(Player player)
+    {
+        this.viewers.add(player);
+        return this;
+    }
+
+    public void draw()
+    {
+        if(menuType == MenuType.INVENTORY)
+        {
+            Inventory inventory = new Inventory(this.menuTemplate, this.menuRender, this.menuFormat);
+            inventory.prepare();
+            inventory.draw();
+            inventory.display(this.viewers);
+        }
+
+        if(menuType == MenuType.TEXT)
+        {
+            Text text = new Text(this.menuTemplate, this.menuRender, this.menuFormat);
+            text.prepare();
+            text.draw();
+            text.display(this.viewers);
+        }
     }
 
 }
