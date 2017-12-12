@@ -2,7 +2,7 @@ package com.openrubicon.core.menu;
 
 import com.openrubicon.core.api.menu.components.Checkbox;
 import com.openrubicon.core.api.menu.components.Component;
-import com.openrubicon.core.api.menu.events.types.CommandEvent;
+import com.openrubicon.core.api.menu.events.types.CommandMenuEvent;
 import com.openrubicon.core.api.menu.interfaces.MenuTemplate;
 import com.openrubicon.core.api.scoreboard.interfaces.ScoreboardSection;
 import com.openrubicon.core.commands.scoreboard.ScoreboardSectionToggle;
@@ -32,7 +32,7 @@ public class ScoreboardSections implements MenuTemplate {
             ScoreboardSection section = entry.getKey();
             Boolean status = entry.getValue();
 
-            components.add(new Checkbox(status).setLabel(section.getTitle()).setName(section.getClass().getSimpleName()).setEvent(new CommandEvent(new ScoreboardSectionToggle())));
+            components.add(new Checkbox(status).setLabel(section.getTitle()).setName(section.getClass().getSimpleName()).setEvent(new CommandMenuEvent(new ScoreboardSectionToggle())));
         }
         return components;
     }

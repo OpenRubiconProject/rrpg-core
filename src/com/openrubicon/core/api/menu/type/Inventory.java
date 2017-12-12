@@ -94,8 +94,8 @@ public class Inventory extends Menu implements InventorySupport {
                 {
                     render.setComponent(component);
                     int placementIndex = (int)((i * columns) + (j * spacing) + offset);
-                    this.inventory.setItem(placementIndex, render.renderInventory());
-                    this.inventoryEventHandler.getSlotEventListeners().put(placementIndex, component.getEvent());
+                    this.inventory.setItem(placementIndex, render.renderInventory(this.getUuid()));
+                    this.inventoryEventHandler.getSlotEventListeners().put(placementIndex, component);
                 }
 
                 index++;
@@ -105,7 +105,21 @@ public class Inventory extends Menu implements InventorySupport {
     }
 
     @Override
+    public void update() {
+        this.clear();
+        this.draw();
+    }
+
+    @Override
+    public void clear() {
+        this.inventory = Bukkit.createInventory(null, size, this.getTemplate().getName());
+    }
+
+    @Override
     public void display(ArrayList<Player> viewers) {
+
+        this.setViewers(viewers);
+
         for(Player player : viewers)
         {
             player.closeInventory();

@@ -58,14 +58,28 @@ public class Text extends Menu implements TextSupport {
             if(render != null)
             {
                 render.setComponent(component);
-                this.getMenuOutput().add(render.renderText());
+                this.getMenuOutput().add(render.renderText(this.getUuid()));
             }
 
         }
     }
 
     @Override
+    public void update() {
+        this.clear();
+        this.draw();
+    }
+
+    @Override
+    public void clear() {
+        this.menuOutput.clear();
+    }
+
+    @Override
     public void display(ArrayList<Player> viewers) {
+
+        this.setViewers(viewers);
+
         // Render the menu to the viewers
         for(Player player : viewers)
         {

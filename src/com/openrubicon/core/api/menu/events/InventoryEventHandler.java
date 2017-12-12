@@ -1,14 +1,14 @@
 package com.openrubicon.core.api.menu.events;
 
-import com.openrubicon.core.api.menu.events.interfaces.EventType;
+import com.openrubicon.core.api.menu.components.Component;
 
 import java.util.HashMap;
 
 public class InventoryEventHandler {
 
-    private HashMap<Integer, EventType> slotEventListeners = new HashMap<>();
+    private HashMap<Integer, Component> slotEventListeners = new HashMap<>();
 
-    public HashMap<Integer, EventType> getSlotEventListeners() {
+    public HashMap<Integer, Component> getSlotEventListeners() {
         return slotEventListeners;
     }
 

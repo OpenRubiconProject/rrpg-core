@@ -6,7 +6,6 @@ import com.openrubicon.core.api.menu.interfaces.MenuRender;
 import com.openrubicon.core.api.menu.interfaces.MenuTemplate;
 import com.openrubicon.core.api.menu.type.Inventory;
 import com.openrubicon.core.api.menu.type.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -23,6 +22,10 @@ public class MenuBuilder {
     public MenuBuilder(MenuTemplate menuTemplate, MenuType menuType) {
         this.menuTemplate = menuTemplate;
         this.menuType = menuType;
+    }
+
+    public MenuBuilder(MenuTemplate menuTemplate) {
+        this.menuTemplate = menuTemplate;
     }
 
     public MenuBuilder withTemplate(MenuTemplate menuTemplate)
@@ -75,6 +78,8 @@ public class MenuBuilder {
             inventory.prepare();
             inventory.draw();
             inventory.display(this.viewers);
+
+            MenuHandler.getMenus().put(inventory.getUuid().toString(), inventory);
         }
 
         if(menuType == MenuType.TEXT)
@@ -83,6 +88,8 @@ public class MenuBuilder {
             text.prepare();
             text.draw();
             text.display(this.viewers);
+
+            MenuHandler.getMenus().put(text.getUuid().toString(), text);
         }
     }
 

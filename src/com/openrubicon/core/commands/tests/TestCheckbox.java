@@ -9,7 +9,7 @@ import com.openrubicon.core.api.menu.components.Component;
 import com.openrubicon.core.api.menu.defaults.MenuFormat;
 import com.openrubicon.core.api.menu.defaults.MenuRender;
 import com.openrubicon.core.api.menu.enums.MenuType;
-import com.openrubicon.core.api.menu.events.types.CommandEvent;
+import com.openrubicon.core.api.menu.events.types.CommandMenuEvent;
 import com.openrubicon.core.api.menu.interfaces.MenuTemplate;
 import com.openrubicon.core.api.utility.DynamicPrimitive;
 import org.bukkit.entity.Player;
@@ -43,12 +43,12 @@ public class TestCheckbox extends Command {
             @Override
             public ArrayList<Component> getComponents() {
                 ArrayList<Component> components = new ArrayList<>();
-                components.add(new Checkbox(false).setLabel("this is a test0").setEvent(new CommandEvent(new TestCommand())));
+                components.add(new Checkbox(false).setLabel("this is a test0").setEvent(new CommandMenuEvent(new TestCommand())));
                 components.add(new Checkbox(true).setLabel("this is a test1"));
                 components.add(new Checkbox(true).setLabel("this is a test2"));
                 components.add(new Checkbox(false).setLabel("this is a test3"));
                 components.add(new Checkbox(true).setLabel("this is a test4"));
-                components.add(new Checkbox(true).setLabel("this is a test5").setEvent(new CommandEvent(new TestCommand())));
+                components.add(new Checkbox(true).setLabel("this is a test5").setEvent(new CommandMenuEvent(new TestCommand())));
                 components.add(new Checkbox(false).setLabel("this is a test6"));
                 components.add(new Checkbox(false).setLabel("this is a test7"));
                 components.add(new Checkbox(false).setLabel("this is a test8"));

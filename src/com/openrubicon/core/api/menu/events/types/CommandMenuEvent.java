@@ -1,19 +1,19 @@
 package com.openrubicon.core.api.menu.events.types;
 
 import com.openrubicon.core.api.command.Command;
-import com.openrubicon.core.api.menu.events.interfaces.EventType;
+import com.openrubicon.core.api.menu.events.interfaces.MenuEvent;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class CommandEvent implements EventType {
+public class CommandMenuEvent implements MenuEvent {
 
     private Command command;
 
     private ArrayList<String> parameters = new ArrayList<>();
 
-    public CommandEvent(Command command) {
+    public CommandMenuEvent(Command command) {
         this.command = command;
     }
 

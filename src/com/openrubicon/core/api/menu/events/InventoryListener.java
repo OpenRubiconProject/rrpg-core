@@ -1,5 +1,7 @@
 package com.openrubicon.core.api.menu.events;
 
+import com.openrubicon.core.api.menu.components.Checkbox;
+import com.openrubicon.core.api.menu.components.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -33,7 +35,11 @@ public class InventoryListener implements Listener {
         {
             if(menus.get(inventory).getSlotEventListeners().get(event.getSlot()) != null)
             {
-                menus.get(inventory).getSlotEventListeners().get(event.getSlot()).trigger(player);
+                Component component = menus.get(inventory).getSlotEventListeners().get(event.getSlot());
+                component.getMenuEvent().trigger(player);
+
+                if(component instanceof Checkbox)
+                    ((Checkbox)component).setChecked(!((Checkbox)component).isChecked());
             }
 
             event.setCancelled(true);

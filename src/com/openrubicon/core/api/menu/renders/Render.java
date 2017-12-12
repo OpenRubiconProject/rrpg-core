@@ -5,6 +5,8 @@ import com.openrubicon.core.api.menu.components.Component;
 import com.openrubicon.core.api.menu.interfaces.Format;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 abstract public class Render {
 
     private Format format;
@@ -28,7 +30,7 @@ abstract public class Render {
 
     abstract public Render getDefault();
 
-    public ItemStack renderInventory() { return null; }
-    public Line renderText() { return null; }
+    public ItemStack renderInventory(UUID menuUuid) { return null; }
+    public Line renderText(UUID menuUuid) { return null; }
 
 }

@@ -118,6 +118,8 @@ abstract public class Command {
 
     public boolean onCommand(Interactable sender, String command, String[] args)
     {
+        //Bukkit.broadcastMessage(args.length + "");
+
         ArrayList<String> commandAliases = new ArrayList<>(Arrays.asList(this.command.split(",")));
 
         // Only the first word

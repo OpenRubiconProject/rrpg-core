@@ -1,19 +1,19 @@
 package com.openrubicon.core.api.menu.components;
 
-import com.openrubicon.core.api.menu.events.interfaces.EventType;
+import com.openrubicon.core.api.menu.events.interfaces.MenuEvent;
 
 abstract public class Component<T> {
 
     private String label;
 
-    private EventType event = null;
+    private MenuEvent menuEvent = null;
 
-    public EventType getEvent() {
-        return event;
+    public MenuEvent getMenuEvent() {
+        return menuEvent;
     }
 
-    public T setEvent(EventType event) {
-        this.event = event;
+    public T setEvent(MenuEvent menuEvent) {
+        this.menuEvent = menuEvent;
         this.initEventParameters();
         return (T)(this);
     }
@@ -31,7 +31,7 @@ abstract public class Component<T> {
 
     public boolean hasEvent()
     {
-        return this.event != null;
+        return this.menuEvent != null;
     }
 
 }

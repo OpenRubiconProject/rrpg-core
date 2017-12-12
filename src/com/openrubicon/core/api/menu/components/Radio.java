@@ -39,7 +39,7 @@ public class Radio extends Component<Radio> {
 
     @Override
     public Radio initEventParameters() {
-        this.getEvent().setParameters(String.valueOf(this.getSelection()));
+        this.getMenuEvent().setParameters(String.valueOf(this.getSelection()));
         return this;
     }
 }

@@ -1,7 +1,5 @@
 package com.openrubicon.core.api.menu.components;
 
-import org.bukkit.Bukkit;
-
 public class Checkbox extends Component<Checkbox> {
 
     private boolean checked = false;
@@ -32,7 +30,7 @@ public class Checkbox extends Component<Checkbox> {
 
     @Override
     public Checkbox initEventParameters() {
-        this.getEvent().setParameters(this.getName(), String.valueOf(!this.isChecked()));
+        this.getMenuEvent().setParameters(this.getName(), String.valueOf(!this.isChecked()));
         return this;
     }
 }

@@ -254,13 +254,13 @@ public class RRPGCore extends JavaPlugin implements Module {
         this.loadServices();
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
-        getLogger().info("Established Core Event Handler.");
+        getLogger().info("Established Core MenuEvent Handler.");
 
         getServer().getPluginManager().registerEvents(new RecipeEventListener(), this);
-        getLogger().info("Established Recipe Event Handler.");
+        getLogger().info("Established Recipe MenuEvent Handler.");
 
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
-        getLogger().info("Established Menu Event Handler.");
+        getLogger().info("Established Menu MenuEvent Handler.");
 
         if (!Bukkit.getPluginManager().isPluginEnabled("Vault"))
         {
@@ -299,7 +299,7 @@ public class RRPGCore extends JavaPlugin implements Module {
 
         getLogger().info("Establishing ASYNC loading..");
 
-        getLogger().info("Scheduling 1 Tick Event");
+        getLogger().info("Scheduling 1 Tick MenuEvent");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -308,7 +308,7 @@ public class RRPGCore extends JavaPlugin implements Module {
             }
         }, 1, 1);
 
-        getLogger().info("Scheduling 5 Tick Event");
+        getLogger().info("Scheduling 5 Tick MenuEvent");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -317,7 +317,7 @@ public class RRPGCore extends JavaPlugin implements Module {
             }
         }, 1, 5);
 
-        getLogger().info("Scheduling 1 Second Event");
+        getLogger().info("Scheduling 1 Second MenuEvent");
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {

@@ -49,7 +49,7 @@ public class Slider extends Component<Slider> {
 
     @Override
     public Slider initEventParameters() {
-        this.getEvent().setParameters(String.valueOf(this.getValue()));
+        this.getMenuEvent().setParameters(String.valueOf(this.getValue()));
         return this;
     }
 }
